@@ -37,10 +37,6 @@ export default function PlayerPanel(props) {
         label_style.animationName = "player_joined";
         label_style.animationDuration = "1s";
     }
-    else {
-        label_style.animationName = "-";
-        label_style.animationDuration = "0s";
-    }
 
     return (
         <div className="player-icon" style={{border: "1px dashed green"}}>

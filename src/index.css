@@ -48,7 +48,8 @@ code {
     height: 220px;
     border-radius: 1em;
     overflow: hidden;
-    margin: auto
+    margin: auto;
+    animation-timing-function: ease;
 }
 
 @keyframes player_joined {
