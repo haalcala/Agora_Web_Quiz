@@ -28,7 +28,12 @@ export default function(props) {
                         const new_state = {game_status: {...state.game_status}};
 
                         if (game_role === 'host') {
-                            new_state.game_status[`answer`] = Math.floor(Math.random() * 4);
+                            if (typeof(state.game_status.answer) === 'undefined') {
+                                new_state.game_status[`answer`] = Math.floor(Math.random() * 4);
+                            }
+                            else {
+                                delete new_state.game_status.answer;
+                            }
                         }
                         else {
                             new_state[`${game_role}_answered`] = !state[`${game_role}_answered`];
