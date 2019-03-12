@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 
 import _ from 'lodash'
+import shortid from 'shortid';
 
 // import { Alert } from 'react-bootstrap'
 // import {Alert} from 'reactstrap';
@@ -11,14 +12,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { videoProfileList, audioProfileList, audioScenarioList, APP_ID, SHARE_ID } from './utils/settings'
 import base64Encode from './utils/base64'
-import QuestionPanel from './components/QuestionPanel'
+import GamePanel from './components/GamePanel'
 import SignalingClient from './lib/SignalingClient';
 
 import ModalExample from './components/ModalExample'
 
-import PlayerPanel from './components/PlayerPanel';
-
-import shortid from 'shortid';
 import { watchFile } from 'fs';
 
 import {Container, Row, Col} from 'reactstrap'
@@ -68,21 +66,9 @@ class App extends Component {
 					</Row>
 				</Container>
 
-				<div style={{display: "flex"}}>
-					{['host', 'player1', 'player2', 'player3'].map(game_role =>
-						<div key={game_role} style={{margin: "auto"}}>
-							<PlayerPanel game_role={game_role} playerId={state[`${game_role}_player_id`]}></PlayerPanel>
-	
-							<button onClick={() => {
-								const new_state = {};
-
-								new_state[`${game_role}_player_id`] = !!state[`${game_role}_player_id`] ? null : shortid.generate();
-
-								this.setState(new_state);
-							}}>Join {game_role}</button>
-						</div>
-					)}
-				</div>
+				<Container>
+					<GamePanel/>
+				</Container>
 			</div>
 		);
 	}
