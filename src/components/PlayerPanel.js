@@ -26,7 +26,9 @@ export default function PlayerPanel(props) {
 
     let just_answered;
 
-    if (!!state.just_answered != !!props.answered) {
+    if (!!state.answered != !!props.my_answer) {
+        state.answered = !!props.my_answer;
+        
         just_answered = !state.just_answered;
     }
 
@@ -42,7 +44,7 @@ export default function PlayerPanel(props) {
         setTimeout(() => {
             setState({...state})
         }, 1000);
-    }, [props.playerId]);
+    }, [props.playerId, props.my_answer]);
 
     const label_style = {_border: "1px solid red"};
 
@@ -53,7 +55,7 @@ export default function PlayerPanel(props) {
                     style={{display: "block", width: "-webkit-fill-available", paddingTop: "1em"}}/>
             </div>
             <div className={['player-label', just_joined ? 'player_joined' : ''].join(' ')} style={label_style}>{props.playerId && _.upperFirst(props.game_role) || "..."}</div>
-            <div className={['player_answer_tab', just_answered ? 'player_new_answer rotate-scale-up' : ' '].join(' ')} style={{}}>
+            <div className={['player_answer_tab', props.answered ? 'player_new_answer' : '', just_answered ? 'rotate-scale-up' : ' '].join(' ')} style={{}}>
                 {(props.answered && 'ABCD'.charAt(props.my_answer)) || null}
             </div>
         </div>
