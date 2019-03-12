@@ -54,7 +54,7 @@ export default function PlayerPanel(props) {
             </div>
             <div className={['player-label', just_joined ? 'player_joined' : ''].join(' ')} style={label_style}>{props.playerId && _.upperFirst(props.game_role) || "..."}</div>
             <div className={['player_answer_tab', just_answered ? 'player_new_answer rotate-scale-up' : ' '].join(' ')} style={{}}>
-                {props.answered && 'ABCD'.charAt(props.my_answer) || null}
+                {(props.answered && 'ABCD'.charAt(props.my_answer)) || null}
             </div>
         </div>
     );

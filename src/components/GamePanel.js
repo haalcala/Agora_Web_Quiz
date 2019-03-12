@@ -14,7 +14,12 @@ export default function(props) {
         <div style={{display: "flex"}}>
             {['host', 'player1', 'player2', 'player3'].map(game_role =>
                 <div key={game_role} style={{margin: "auto"}}>
-                    <PlayerPanel game_status={state.game_status} game_role={game_role} playerId={state[`${game_role}_player_id`]} answered={!!state.game_status[`${game_role}_answered`]}></PlayerPanel>
+                    <PlayerPanel 
+                        my_answer={state[`${game_role}_answer`]}
+                        game_status={state.game_status} 
+                        game_role={game_role} 
+                        playerId={state[`${game_role}_player_id`]} 
+                        answered={!!state.game_status[`${game_role}_answered`]}></PlayerPanel>
 
                     <button onClick={() => {
                         const new_state = {};
@@ -36,8 +41,8 @@ export default function(props) {
                             }
                         }
                         else {
-                            new_state[`${game_role}_answered`] = !state[`${game_role}_answered`];
-                            new_state.my_answer = new_state.game_status[`${game_role}_answered`] = Math.floor(Math.random() * 4);
+                            new_state.game_status[`${game_role}_answered`] = !state[`${game_role}_answered`];
+                            new_state.my_answer = new_state[`${game_role}_answer`] = Math.floor(Math.random() * 4);
                         }
 
                         console.log('new_state', new_state)
