@@ -29,14 +29,25 @@ export default function PlayerPanel(props) {
 
     useEffect(() => {
         console.log(`[${props.game_role}]:: `, 'useEffect:: props', props);
-    }, ['playerId']);
+        console.log(`[${props.game_role}]:: `, 'useEffect:: just_joined', just_joined);
+
+        setTimeout(() => {
+            setState({...state})
+        }, 1000);
+    }, [props.playerId]);
 
     const label_style = {border: "1px solid red"};
 
-    if (just_joined) {
-        label_style.animationName = "player_joined";
-        label_style.animationDuration = "1s";
-    }
+    // if (just_joined) {
+    //     label_style.animationName = "player_joined";
+    //     label_style.animationDuration = "1s";
+    // }
+
+    // if (just_joined) {
+    //     setTimeout(() => {
+    //         setState({})
+    //     }, 1000);
+    // }
 
     return (
         <div className="player-icon" style={{border: "1px dashed green"}}>
@@ -44,7 +55,7 @@ export default function PlayerPanel(props) {
                 <img src={require("./player.jpg")} 
                     style={{display: "block", width: "-webkit-fill-available", paddingTop: "1em"}}/>
             </div>
-            <div className="player-label" style={label_style}>{props.playerId && props.game_role || "..."}</div>
+            <div className={['player-label', just_joined ? 'player_joined' : ''].join(' ')} style={label_style}>{props.playerId && props.game_role || "..."}</div>
         </div>
     );
 }
