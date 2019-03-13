@@ -48,7 +48,14 @@ export default function(props) {
     const {game_context} = props;
     const {game_role, PLAYER_ID, game_status} = game_context;
 
-    console.log('GamePanel.js:: state', state);
+    console.log('[GamePanel.js]:: state', state);
+
+    if (game_role === "host") {
+        console.log(`[GamePanel.js]:: Setting up onPlayerJoin`);
+		game_context.onPlayerJoin = (...args) => {
+			console.log(`[GamePanel.js]:: onPlayerJoin`, ...args);
+		};
+    }
 
     return (
         <div style={{display: "flex"}}>

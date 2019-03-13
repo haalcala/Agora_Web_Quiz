@@ -31,8 +31,10 @@ let GAME_ID = 'Wbo-OUgMQ';
 
 console.log('App.js:: PLAYER_ID', PLAYER_ID, 'GAME_STATUS_WAIT_FOR_PLAYERS', GAME_STATUS_WAIT_FOR_PLAYERS, 'GAME_STATUS_STARTED', GAME_STATUS_STARTED, 'GAME_STATUS_ENDED', GAME_STATUS_ENDED);
 
+let host_game_context = new GameContext('host');
+
 const game_contexts = [
-	new GameContext('host'), 
+	host_game_context, 
 	// new GameContext('player'), 
 	// new GameContext('audience')
 ];
@@ -63,6 +65,12 @@ export default (props) => {
 
 	const handleSendAnswer = (answer) => {
 
+	}
+
+	if (host_game_context) {
+		host_game_context.onPlayerJoin((...args) => {
+			console.log(`[App.js]:: onPlayerJoin`, ...args);
+		});
 	}
 
 	return (
