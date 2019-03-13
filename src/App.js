@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
@@ -33,47 +33,47 @@ const QUIZ_STATUS_TEXT = ["Game Initialised", "Wating for players", "Quiz Starte
 console.log('PLAYER_ID', PLAYER_ID, 'GAME_STATUS_WAIT_FOR_PLAYERS', GAME_STATUS_WAIT_FOR_PLAYERS, 'GAME_STATUS_STARTED', GAME_STATUS_STARTED, 'GAME_STATUS_ENDED', GAME_STATUS_ENDED);
 
 
-class App extends Component {
-	state = {
-		showModal: false
-	}
+export default (props) => {
+	const [state, setState] = useState({
+		showModal: false,
+		game_role: "host",
+	});
 
-	render() {
-		const { state } = this;
+	(async () => {
+		console.log('aaaa', new Date())
 
-		(async () => {
-			console.log('aaaa', new Date())
+		await new Promise(resolve => {
+			setTimeout(resolve, 1000);
+		})
 
-			await new Promise(resolve => {
-				setTimeout(resolve, 1000);
-			})
+		console.log('test', new Date());
+	})();
 
-			console.log('test', new Date());
-		})();
+	return (
+		<div className="App">
+			<div style={{position: "absolute", top: 0, left: 0}}>{_.upperFirst(state.game_role)}</div>
 
-		return (
-			<div className="App">
-				<button onClick={() => {
-					this.setState({showModal: !state.showModal})
-				}}>Show modal</button>
-				{state.showModal ? 
-				<ModalExample modal={state.showModal} buttonLabel="Show!"></ModalExample> : ""}
+			<button onClick={() => {
+				this.setState({showModal: !state.showModal})
+			}}>Show modal</button>
+			
+			{state.showModal ? 
+			<ModalExample modal={state.showModal} buttonLabel="Show!"></ModalExample> : ""}
 
-				<Container style={{border: "1px solid red", width: "100%", display: "block"}}>
-					<Row style={{border: "1px solid green", width: "100%",}}>
-						<Col>.col</Col>
-						<Col>.col</Col>
-					</Row>
-				</Container>
+			<Container style={{border: "1px solid red", width: "100%", display: "block"}}>
+				<Row style={{border: "1px solid green", width: "100%",}}>
+					<Col>.col</Col>
+					<Col>.col</Col>
+				</Row>
+			</Container>
 
-				<Container>
-					<GamePanel game_role='host'/>
-					<GamePanel game_role='player'/>
-					<GamePanel game_role='audience'/>
-				</Container>
-			</div>
-		);
-	}
+			<Container>	
+				<GamePanel game_role={state.game_role}/>
+
+				<button onClick={() => {setState({game_role: "host"})}} style={{display: 'block'}}>Render as Host</button>
+				<button onClick={() => {setState({game_role: "player"})}} style={{display: 'block'}}>Render as Player</button>
+				<button onClick={() => {setState({game_role: "audience"})}} style={{display: 'block'}}>Render as Audience</button>
+			</Container>
+		</div>
+	);
 }
-
-export default App;

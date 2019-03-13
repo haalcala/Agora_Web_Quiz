@@ -51,7 +51,6 @@ export default function(props) {
 
     return (
         <div style={{display: "flex"}}>
-            <div>{game_role}</div>
             {['host', 'player1', 'player2', 'player3'].map(quiz_role =>
                 <div key={quiz_role} style={{margin: "auto", border: '1px dashed green'}}>
                     <PlayerPanel 
@@ -89,6 +88,8 @@ export default function(props) {
 
                         setState({...state, ...new_state});
                     }} style={{display: 'block'}}>{_.upperFirst(quiz_role)} Answer</button>
+
+
                 </div>
             )}
         </div>
