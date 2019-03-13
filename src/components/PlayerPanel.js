@@ -38,13 +38,13 @@ export default function PlayerPanel(props) {
     // console.log(`[${props.game_role}]:: `, 'state2, setState2', state2, setState2);
 
     useEffect(() => {
-        console.log(`[${props.game_role}]:: `, 'useEffect:: props', props);
-        console.log(`[${props.game_role}]:: `, 'useEffect:: just_joined', just_joined);
-
+        
         setTimeout(() => {
+            console.log(`[${props.game_role}]:: `, 'useEffect:: props', props);
+            console.log(`[${props.game_role}]:: `, 'useEffect:: just_joined', just_joined);
             setState({...state})
-        }, 1000);
-    }, [props.playerId, props.my_answer]);
+        }, 600);
+    }, [props.playerId + props.my_answer]);
 
     const label_style = {_border: "1px solid red"};
 
@@ -55,7 +55,7 @@ export default function PlayerPanel(props) {
                     style={{display: "block", width: "-webkit-fill-available", paddingTop: "1em"}}/>
             </div>
             <div className={['player-label', just_joined ? 'player_joined' : ''].join(' ')} style={label_style}>{props.playerId && _.upperFirst(props.game_role) || "..."}</div>
-            <div className={['player_answer_tab', props.answered ? 'player_new_answer' : '', just_answered ? 'rotate-scale-up' : ' '].join(' ')} style={{}}>
+            <div className={['player_answer_tab', !!props.answered ? 'player_new_answer' : '', just_answered ? 'rotate-scale-up' : ' '].join(' ')} style={{}}>
                 {(props.answered && 'ABCD'.charAt(props.my_answer)) || null}
             </div>
         </div>
