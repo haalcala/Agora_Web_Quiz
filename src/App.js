@@ -67,7 +67,9 @@ class App extends Component {
 				</Container>
 
 				<Container>
-					<GamePanel/>
+					<GamePanel game_role='host'/>
+					<GamePanel game_role='player'/>
+					<GamePanel game_role='audience'/>
 				</Container>
 			</div>
 		);
