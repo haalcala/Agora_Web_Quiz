@@ -43,53 +43,53 @@ state:
 */
 
 export default function(props) {
-    const [state, setState] = useState({game_status: {}});
+    const [state, setState] = useState({});
 
-    const {game_role} = props;
+    const {game_context} = props;
+    const {game_role, PLAYER_ID, game_status} = game_context;
 
     console.log('GamePanel.js:: state', state);
 
     return (
         <div style={{display: "flex"}}>
+            <div>{_.upperFirst(game_role)} <div style={{display: 'block'}}/> PLAYER_ID {PLAYER_ID}</div>
             {['host', 'player1', 'player2', 'player3'].map(quiz_role =>
-                <div key={quiz_role} style={{margin: "auto", border: '1px dashed green'}}>
+                <div key={quiz_role} style={{margin: "auto", border: '1px dashed green', marginTop: '0px'}}>
                     <PlayerPanel 
-                        my_answer={state[`${quiz_role}_answer`]}
-                        game_status={state.game_status} 
+                        my_answer={game_context[`${quiz_role}_answer`]}
+                        game_status={game_status} 
                         quiz_role={quiz_role} 
-                        playerId={state[`${quiz_role}_player_id`]} 
-                        answered={!!state.game_status[`${quiz_role}_answered`]}></PlayerPanel>
+                        playerId={game_context[`${quiz_role}_player_id`]} 
+                        answered={!!game_status[`${quiz_role}_answered`]}></PlayerPanel>
+
+                    {quiz_role.indexOf(game_role) !== 0 ? (
+                        <button onClick={() => {
+                            const new_player_id = shortid.generate();
+
+                            game_context.assignQuizRole(new_player_id);
+
+                            setState({});
+                        }} style={{display: 'block'}}>{!state[`${quiz_role}_player_id`] ? 'Join' : 'Leave'} {_.upperFirst(quiz_role)}</button>
+                    ) : null}
 
                     <button onClick={() => {
-                        const new_state = {};
-
-                        new_state[`${quiz_role}_player_id`] = !!state[`${quiz_role}_player_id`] ? null : shortid.generate();
-
-                        setState({...state, ...new_state});
-                    }} style={{display: 'block'}}>{!state[`${quiz_role}_player_id`] ? 'Join' : 'Leave'} {_.upperFirst(quiz_role)}</button>
-
-                    <button onClick={() => {
-                        const new_state = {game_status: {...state.game_status}};
-
-                        if (quiz_role === 'host') {
-                            if (typeof(state.game_status.answer) === 'undefined') {
-                                new_state.game_status[`answer`] = Math.floor(Math.random() * 4);
+                        if (game_role === 'host') {
+                            if (typeof(game_context.game_status.answer) === 'undefined') {
+                                game_context.game_status[`answer`] = Math.floor(Math.random() * 4);
                             }
                             else {
-                                delete new_state.game_status.answer;
+                                delete game_context.game_status.answer;
                             }
                         }
                         else {
-                            new_state.game_status[`${quiz_role}_answered`] = !state[`${quiz_role}_answered`];
-                            new_state.my_answer = new_state[`${quiz_role}_answer`] = Math.floor(Math.random() * 4);
+                            game_context.game_status[`${quiz_role}_answered`] = !state[`${quiz_role}_answered`];
+                            game_context.my_answer = game_context[`${quiz_role}_answer`] = Math.floor(Math.random() * 4);
                         }
 
-                        console.log('new_state', new_state)
+                        console.log('game_context', game_context)
 
-                        setState({...state, ...new_state});
+                        setState({});
                     }} style={{display: 'block'}}>{_.upperFirst(quiz_role)} Answer</button>
-
-
                 </div>
             )}
         </div>

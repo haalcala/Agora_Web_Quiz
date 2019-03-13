@@ -15,23 +15,27 @@ import base64Encode from './utils/base64'
 import GamePanel from './components/GamePanel'
 import SignalingClient from './lib/SignalingClient';
 
+import GameContext from './components/GameContext'
 import ModalExample from './components/ModalExample'
 
 import { watchFile } from 'fs';
 
 import {Container, Row, Col} from 'reactstrap'
 
-const [QUIZ_ROLE_HOST, QUIZ_ROLE_PLAYER, QUIZ_ROLE_AUDIENCE, PLAYER_ID] = ['host', 'player', 'audience', shortid.generate()];
+import Util from './utils/index';
+const {QUIZ_STATUS_TEXT, QUIZ_ROLE_HOST, QUIZ_ROLE_PLAYER, QUIZ_ROLE_AUDIENCE, GAME_STATUS_INITIALISED, GAME_STATUS_WAIT_FOR_PLAYERS, GAME_STATUS_STARTED, GAME_STATUS_ENDED} = Util;
 
-const [GAME_STATUS_INITIALISED, GAME_STATUS_WAIT_FOR_PLAYERS, GAME_STATUS_STARTED, GAME_STATUS_ENDED] = _.times(4);
+const PLAYER_ID = shortid.generate();
 
 let GAME_ID = 'Wbo-OUgMQ';
 
-const QUIZ_STATUS_TEXT = ["Game Initialised", "Wating for players", "Quiz Started", 'Quiz Ended'];
+console.log('App.js:: PLAYER_ID', PLAYER_ID, 'GAME_STATUS_WAIT_FOR_PLAYERS', GAME_STATUS_WAIT_FOR_PLAYERS, 'GAME_STATUS_STARTED', GAME_STATUS_STARTED, 'GAME_STATUS_ENDED', GAME_STATUS_ENDED);
 
-
-console.log('PLAYER_ID', PLAYER_ID, 'GAME_STATUS_WAIT_FOR_PLAYERS', GAME_STATUS_WAIT_FOR_PLAYERS, 'GAME_STATUS_STARTED', GAME_STATUS_STARTED, 'GAME_STATUS_ENDED', GAME_STATUS_ENDED);
-
+const game_contexts = [
+	new GameContext('host'), 
+	// new GameContext('player'), 
+	// new GameContext('audience')
+];
 
 export default (props) => {
 	const [state, setState] = useState({
@@ -49,14 +53,26 @@ export default (props) => {
 		console.log('test', new Date());
 	})();
 
+	const handleSelectAnswer = (answer) => {
+		
+	}
+
+	const handleSendQuestion = (answer) => {
+
+	}
+
+	const handleSendAnswer = (answer) => {
+
+	}
+
 	return (
 		<div className="App">
-			<div style={{position: "absolute", top: 0, left: 0}}>{_.upperFirst(state.game_role)}</div>
+			{/* <div style={{position: "absolute", top: 0, left: 0}}>{_.upperFirst(state.game_role)}</div> */}
 
 			<button onClick={() => {
 				this.setState({showModal: !state.showModal})
 			}}>Show modal</button>
-			
+
 			{state.showModal ? 
 			<ModalExample modal={state.showModal} buttonLabel="Show!"></ModalExample> : ""}
 
@@ -68,11 +84,9 @@ export default (props) => {
 			</Container>
 
 			<Container>	
-				<GamePanel game_role={state.game_role}/>
-
-				<button onClick={() => {setState({game_role: "host"})}} style={{display: 'block'}}>Render as Host</button>
-				<button onClick={() => {setState({game_role: "player"})}} style={{display: 'block'}}>Render as Player</button>
-				<button onClick={() => {setState({game_role: "audience"})}} style={{display: 'block'}}>Render as Audience</button>
+				{game_contexts.map(game_context => (
+					<GamePanel key={shortid.generate()} game_context={game_context}/>
+				))}
 			</Container>
 		</div>
 	);

@@ -5,7 +5,7 @@ import {Col} from 'reactstrap';
 import _ from 'lodash';
 
 export default function PlayerPanel(props) {
-    const {quiz_role} = props;
+    const {quiz_role, game_status} = props;
 
     console.log(`[${quiz_role}]:: `, 'PlayerPanel:: props', props);
 
@@ -55,7 +55,9 @@ export default function PlayerPanel(props) {
                 <img src={require("./player.jpg")} 
                     style={{display: "block", width: "-webkit-fill-available", paddingTop: "1em"}}/>
             </div>
-            <div className={['player-label', just_joined ? 'player_joined' : ''].join(' ')} style={label_style}>{props.playerId && _.upperFirst(quiz_role) || "..."}</div>
+            <div className={['player-label', just_joined ? 'player_joined' : ''].join(' ')} style={label_style}>
+                {props.playerId && `${_.upperFirst(quiz_role)} ${props.playerId == game_status[`${quiz_role}_player_id`] && '(ME)' || ''}` || "..."}
+            </div>
             <div className={['player_answer_tab', !!props.answered ? 'player_new_answer' : '', just_answered ? 'rotate-scale-up' : ' '].join(' ')} style={{}}>
                 {(props.answered && 'ABCD'.charAt(props.my_answer)) || null}
             </div>
