@@ -41,11 +41,11 @@ export default function PlayerPanel(props) {
     useEffect(() => {
         console.log(`[${quiz_role}]:: `, 'useEffect:: 111 props', props, 'just_joined', just_joined);
         
-        // setTimeout(() => {
-        //     console.log(`[${quiz_role}]:: `, 'useEffect:: 222 props', props, 'just_joined', just_joined);
-        //     setState({...state})
-        // }, 1000);
-    }, []);
+        setTimeout(() => {
+            console.log(`[${quiz_role}]:: `, 'useEffect:: 222 props', props, 'just_joined', just_joined);
+            setState({...state})
+        }, 600);
+    }, [props.playerId]);
 
     console.log('player label classes', ['player-label', just_joined ? 'player_joined' : ''].join(' '))
 
