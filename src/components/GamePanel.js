@@ -45,21 +45,28 @@ state:
 export default function(props) {
     const [state, setState] = useState({});
 
-    const {game_context} = props;
-    const {game_role, PLAYER_ID, game_status} = game_context;
+    const {quiz_engine} = props;
+    const {game_role, PLAYER_ID, game_status} = quiz_engine;
 
-    console.log('[GamePanel.js]:: state', state, 'game_context', game_context);
+    console.log('[GamePanel.js]:: state', state, 'quiz_engine', quiz_engine);
 
     useEffect(() => {
         if (game_role === "host") {
             console.log(`[GamePanel.js]:: Setting up onPlayerJoin`);
-            game_context.onPlayerJoin = (playerId) => {
+
+            quiz_engine.onPlayerJoin = (playerId) => {
                 console.log(`[GamePanel.js]:: onPlayerJoin`, playerId);
 
-                // setState({});
+                setState({});
+            };
+
+            quiz_engine.onPlayerAnswer = (answer, playerId) => {
+                console.log(`[GamePanel.js]:: onPlayerAnswer`, answer, playerId);
+
+                setState({});
             };
         }
-    }, [props.game_context]);
+    }, [props.quiz_engine]);
 
 
     return (
@@ -68,8 +75,8 @@ export default function(props) {
             {['host', 'player1', 'player2', 'player3'].map(quiz_role =>
                 <div key={quiz_role} style={{margin: "auto", border: '1px dashed green', marginTop: '0px'}}>
                     <PlayerPanel 
-                        my_answer={game_context[`${quiz_role}_answer`]}
-                        game_context={game_context} 
+                        my_answer={quiz_engine[`${quiz_role}_answer`]}
+                        quiz_engine={quiz_engine} 
                         quiz_role={quiz_role} 
                         playerId={game_status[`${quiz_role}_player_id`]} 
                         answered={!!game_status[`${quiz_role}_answered`]}></PlayerPanel>
@@ -83,31 +90,29 @@ export default function(props) {
                             else {
                                 const new_player_id = shortid.generate();
     
-                                const player_role = await game_context.assignQuizRole(new_player_id);
+                                const player_role = await quiz_engine.assignQuizRole(new_player_id);
                             }
-
-                            // if (player_role) {
-                                setState({})
-                            // }
-
                         }} style={{display: 'block'}}>{!game_status[`${quiz_role}_player_id`] ? 'Join' : 'Leave'} {_.upperFirst(quiz_role)}</button>
                     ) : null}
 
-                    <button onClick={() => {
+                    <button onClick={async () => {
                         if (game_role === 'host') {
-                            if (typeof(game_context.game_status.answer) === 'undefined') {
-                                game_context.game_status[`answer`] = Math.floor(Math.random() * 4);
-                            }
-                            else {
-                                delete game_context.game_status.answer;
-                            }
+                            const answer = Math.floor(Math.random() * 4);
+
+                            await quiz_engine.sendAnswer(answer, game_status[`${quiz_role}_player_id`]);
+
+                            setImmediate(() => {
+                                if (this.onPlayerAnswer) {
+                                    this.onPlayerAnswer(answer, game_status[`${quiz_role}_player_id`]);
+                                }
+                            });    
                         }
                         else {
-                            game_context.game_status[`${quiz_role}_answered`] = !state[`${quiz_role}_answered`];
-                            game_context.my_answer = game_context[`${quiz_role}_answer`] = Math.floor(Math.random() * 4);
+                            quiz_engine.game_status[`${quiz_role}_answered`] = !state[`${quiz_role}_answered`];
+                            quiz_engine.my_answer = quiz_engine[`${quiz_role}_answer`] = Math.floor(Math.random() * 4);
                         }
 
-                        console.log('game_context', game_context)
+                        console.log('quiz_engine', quiz_engine)
 
                         setState({});
                     }} style={{display: 'block'}}>{_.upperFirst(quiz_role)} Answer</button>

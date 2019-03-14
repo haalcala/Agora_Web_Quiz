@@ -15,7 +15,7 @@ import base64Encode from './utils/base64'
 import GamePanel from './components/GamePanel'
 import SignalingClient from './lib/SignalingClient';
 
-import GameContext from './components/GameContext'
+import QuizEngine from './components/QuizEngine'
 import ModalExample from './components/ModalExample'
 
 import { watchFile } from 'fs';
@@ -31,12 +31,12 @@ let GAME_ID = 'Wbo-OUgMQ';
 
 console.log('App.js:: PLAYER_ID', PLAYER_ID, 'GAME_STATUS_WAIT_FOR_PLAYERS', GAME_STATUS_WAIT_FOR_PLAYERS, 'GAME_STATUS_STARTED', GAME_STATUS_STARTED, 'GAME_STATUS_ENDED', GAME_STATUS_ENDED);
 
-let host_game_context = new GameContext('host');
+let host_quiz_engine = new QuizEngine('host');
 
-const game_contexts = [
-	host_game_context, 
-	// new GameContext('player'), 
-	// new GameContext('audience')
+const quiz_engines = [
+	host_quiz_engine, 
+	// new QuizEngine('player'), 
+	// new QuizEngine('audience')
 ];
 
 export default (props) => {
@@ -67,8 +67,8 @@ export default (props) => {
 
 	}
 
-	if (host_game_context) {
-		host_game_context.onPlayerJoin((...args) => {
+	if (host_quiz_engine) {
+		host_quiz_engine.onPlayerJoin((...args) => {
 			console.log(`[App.js]:: onPlayerJoin`, ...args);
 		});
 	}
@@ -92,8 +92,8 @@ export default (props) => {
 			</Container>
 
 			<Container>	
-				{game_contexts.map(game_context => (
-					<GamePanel key={shortid.generate()} game_context={game_context}/>
+				{quiz_engines.map(quiz_engine => (
+					<GamePanel key={shortid.generate()} quiz_engine={quiz_engine}/>
 				))}
 			</Container>
 		</div>

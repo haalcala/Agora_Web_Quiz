@@ -5,7 +5,7 @@ import shortid from 'shortid';
 import Util from '../utils/index';
 const {QUIZ_STATUS_TEXT, QUIZ_ROLE_HOST, QUIZ_ROLE_PLAYER, QUIZ_ROLE_AUDIENCE, GAME_STATUS_INITIALISED, GAME_STATUS_WAIT_FOR_PLAYERS, GAME_STATUS_STARTED, GAME_STATUS_ENDED} = Util;
 
-export default class GameContext {
+export default class QuizEngine {
     PLAYER_ID = shortid.generate();
 
     GAME_ID;
@@ -21,7 +21,7 @@ export default class GameContext {
     constructor(game_role) {
         const {game_status} = this;
 
-        console.log('[GameContext.js|constructor]('+game_role+'):: ----------------------------------------------------------------');
+        console.log('[QuizEngine.js|constructor]('+game_role+'):: ----------------------------------------------------------------');
         
         this.game_role =  game_role;
         
@@ -35,11 +35,13 @@ export default class GameContext {
             throw new Error(`Invalid game role \'${game_role}\'`);
         }
 
-        console.log('[GameContext.js|constructor]('+game_role+'):: game_status', game_status);
+        console.log('[QuizEngine.js|constructor]('+game_role+'):: game_status', game_status);
     }
 
     onPlayerJoin = () => {};
     onPlayerLeave = () => {};
+    
+    onPlayerAnswer = () => {};
 
     createGame = async () => {
         const {game_role, game_status} = this;
@@ -69,9 +71,23 @@ export default class GameContext {
         }
     }
 
-    leaveGame() {
+    leaveGame =  async () => {
         
     }
+
+    sendAnswer = async (answer, playerId) => {
+        if (answer >= 0 && answer < 4) {
+            if (this.game_role === "host") {
+
+            }
+            else if (this.game_role.indexOf("player") === 0) {
+
+            }
+        }
+        else {
+            throw new Error("Answer can only be between 0 and 3, inclusive");
+        }
+    };
 
     assignQuizRole = async (new_player_id) => {
         const {game_status} = this;

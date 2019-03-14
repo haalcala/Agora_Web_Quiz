@@ -5,8 +5,8 @@ import {Col} from 'reactstrap';
 import _ from 'lodash';
 
 export default function PlayerPanel(props) {
-    const {quiz_role, game_context} = props;
-    const {game_status} = game_context;
+    const {quiz_role, quiz_engine} = props;
+    const {game_status} = quiz_engine;
 
     const [state, setState] = useState({joined: false});
     const [state2, setState2] = useState({count: 0});
@@ -56,7 +56,7 @@ export default function PlayerPanel(props) {
                     style={{display: "block", width: "-webkit-fill-available", paddingTop: "1em"}}/>
             </div>
             <div className={['player-label', just_joined ? 'player_joined' : ''].join(' ')}>
-                {props.playerId && `${_.upperFirst(quiz_role)} ${props.playerId == game_context.PLAYER_ID && '(ME)' || ''}` || "..."}
+                {props.playerId && `${_.upperFirst(quiz_role)} ${props.playerId == quiz_engine.PLAYER_ID && '(ME)' || ''}` || "..."}
             </div>
             <div className={['player_answer_tab', !!props.answered ? 'player_new_answer' : '', just_answered ? 'rotate-scale-up' : ' '].join(' ')} style={{}}>
                 {(props.answered && 'ABCD'.charAt(props.my_answer)) || null}
