@@ -36,33 +36,33 @@ class QuestionPanel extends React.Component {
         const {answer_from_host, question, question_answers, selected_answer} = this.props;
 
 		return (
-			<div className="card" style={{ border: "1px solid red", width: "100%", padding: "1em", height: "-webkit-fill-available"}}>
-					<div className="card" style={{border: "1px solid green", height: "-webkit-fill-available"}}>
-						<div className="card" style={{width: "50em", margin: "auto", display: "block"}}>
-							<h1>Question:</h1>
-							<h1 style={{textAlign: "center"}}>
-								{question}
-							</h1>
-                            {answer_from_host ? (
-                                <div>
-                                    <h1>Answer:</h1>
-                                    <h1 style={{textAlign: "left", textDecoration: "underline", marginLeft: "3em"}}>
-                                        {`${'ABCD'.charAt(answer_from_host)}. ${question_answers[answer_from_host]}`}
-                                    </h1>
-                                </div>
-                            ) : ""}
-						</div>
-					</div>
-					<div style={{visibility: "hidden"}}>1</div>
-					<div className="card" style={{border: "1px solid green", display: "block", columnGap: ".3em"}}>
-						<div style={{margin: "1em"}}>
-							{_.times(4).map(i => {
-								return (
-                                    <AnswerItem key={i} selected_answer={selected_answer} answer_from_host={answer_from_host} i={i} option={question_answers[i]} selectAnswer={this.selectAnswer}></AnswerItem>
-								);
-							})}
-						</div>
-					</div>
+			<div className="card" style={{ border: "1px solid red", width: "100%", padding: "1em"}}>
+                <div className="card" style={{border: "1px solid green", height: "-webkit-fill-available"}}>
+                    <div className="card" style={{width: "50em", margin: "auto", display: "block"}}>
+                        <h1>Question:</h1>
+                        <h1 style={{textAlign: "center"}}>
+                            {question}
+                        </h1>
+                        {answer_from_host ? (
+                            <div>
+                                <h1>Answer:</h1>
+                                <h1 style={{textAlign: "left", textDecoration: "underline", marginLeft: "3em"}}>
+                                    {`${'ABCD'.charAt(answer_from_host)}. ${question_answers[answer_from_host]}`}
+                                </h1>
+                            </div>
+                        ) : ""}
+                    </div>
+                </div>
+                <div style={{visibility: "hidden"}}>1</div>
+                <div className="card" style={{border: "1px solid green", display: "block", columnGap: ".3em"}}>
+                    <div style={{margin: "1em"}}>
+                        {_.times(4).map(i => {
+                            return (
+                                <AnswerItem key={i} selected_answer={selected_answer} answer_from_host={answer_from_host} i={i} option={question_answers[i]} selectAnswer={this.selectAnswer}></AnswerItem>
+                            );
+                        })}
+                    </div>
+                </div>
 			</div>
 		);
 	}

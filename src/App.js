@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
@@ -31,70 +31,60 @@ let GAME_ID = 'Wbo-OUgMQ';
 
 console.log('App.js:: PLAYER_ID', PLAYER_ID, 'GAME_STATUS_WAIT_FOR_PLAYERS', GAME_STATUS_WAIT_FOR_PLAYERS, 'GAME_STATUS_STARTED', GAME_STATUS_STARTED, 'GAME_STATUS_ENDED', GAME_STATUS_ENDED);
 
-let host_quiz_engine = new QuizEngine('host');
-
-const quiz_engines = [
-	host_quiz_engine, 
-	// new QuizEngine('player'), 
-	// new QuizEngine('audience')
-];
-
 export default (props) => {
 	const [state, setState] = useState({
 		showModal: false,
-		game_role: "host",
+		quiz_engine : new QuizEngine('host')
 	});
 
-	(async () => {
-		console.log('aaaa', new Date())
+	const {quiz_engine, game_role} = state;
 
-		await new Promise(resolve => {
-			setTimeout(resolve, 1000);
-		})
+	// useEffect(() => {
+	// 	console.log("[App.js] useEffect::");
 
-		console.log('test', new Date());
-	})();
+	// 	if (state.game_role) {
+	// 		setTimeout(() => {
+	// 			const quiz_engine = new QuizEngine(state.game_role);
 
-	const handleSelectAnswer = (answer) => {
-		
-	}
+	// 			setState({...state, quiz_engine});
+	// 		}, 1000);
+	// 	}
+	// }, [state.game_role]);
 
-	const handleSendQuestion = (answer) => {
+	// setTimeout(() => {
+	// 	const quiz_engine = new QuizEngine('host');
 
-	}
-
-	const handleSendAnswer = (answer) => {
-
-	}
-
-	if (host_quiz_engine) {
-		host_quiz_engine.onPlayerJoin((...args) => {
-			console.log(`[App.js]:: onPlayerJoin`, ...args);
-		});
-	}
+	// 	setState({...state, quiz_engine});
+	// }, 1000);
 
 	return (
 		<div className="App">
 			{/* <div style={{position: "absolute", top: 0, left: 0}}>{_.upperFirst(state.game_role)}</div> */}
 
-			<button onClick={() => {
+			{/* <button onClick={() => {
 				this.setState({showModal: !state.showModal})
 			}}>Show modal</button>
 
 			{state.showModal ? 
-			<ModalExample modal={state.showModal} buttonLabel="Show!"></ModalExample> : ""}
+			<ModalExample modal={state.showModal} buttonLabel="Show!"></ModalExample> : ""} */}
 
-			<Container style={{border: "1px solid red", width: "100%", display: "block"}}>
+			{/* <Container style={{border: "1px solid red", width: "100%", display: "block"}}>
 				<Row style={{border: "1px solid green", width: "100%",}}>
 					<Col>.col</Col>
 					<Col>.col</Col>
 				</Row>
-			</Container>
+			</Container> */}
 
 			<Container>	
-				{quiz_engines.map(quiz_engine => (
-					<GamePanel key={shortid.generate()} quiz_engine={quiz_engine}/>
-				))}
+				{quiz_engine ? 
+					<GamePanel quiz_engine={quiz_engine}/>
+					: 
+					<div className={game_role ? 'bounce-out-top' : 'slide-in-elliptic-top-fwd'} style={{height: '-webkit-fill-available', _border: '1px solid red', display:'flex', flexDirection:'column', justifyContent:'space-around'}}>
+						<div className="main-menu-item" onClick={() => setState({...state, game_role: 'host'})}>Host</div>
+						<div className="main-menu-item" onClick={() => setState({...state, game_role: 'player'})}>Participate</div>
+						<div className="main-menu-item" onClick={() => setState({...state, game_role: 'audience'})}>Watch</div>
+					</div>
+				}
 			</Container>
 		</div>
 	);

@@ -5,6 +5,8 @@ import shortid from 'shortid';
 
 import PlayerPanel from './PlayerPanel';
 
+import QuestinPanel from './QuestionPanel';
+
 /*
 
 state: 
@@ -70,56 +72,64 @@ export default function(props) {
 
 
     return (
-        <div style={{display: "flex"}}>
-            <div>{_.upperFirst(game_role)} <div style={{display: 'block'}}/> PLAYER_ID {PLAYER_ID}</div>
-            {['host', 'player1', 'player2', 'player3'].map(quiz_role =>
-                <div key={quiz_role} style={{margin: "auto", border: '1px dashed green', marginTop: '0px'}}>
-                    <PlayerPanel 
-                        my_answer={quiz_engine[`${quiz_role}_answer`]}
-                        quiz_engine={quiz_engine} 
-                        quiz_role={quiz_role} 
-                        playerId={game_status[`${quiz_role}_player_id`]} 
-                        answered={!!game_status[`${quiz_role}_answered`]}></PlayerPanel>
+        <div className='game-panel slide-in-top'>
+            <div>
+                <div style={{display: "flex", _border: '10px dashed green', width: '-webkit-fill-available'}}>
+                    {/* <div>{_.upperFirst(game_role)} <div style={{display: 'block'}}/> PLAYER_ID {PLAYER_ID}</div> */}
+                    {['host', 'player1', 'player2', 'player3'].map(quiz_role =>
+                        <div key={quiz_role} style={{margin: "auto", _border: '1px dashed green', marginTop: '0px'}}>
+                            <PlayerPanel 
+                                my_answer={quiz_engine[`${quiz_role}_answer`]}
+                                quiz_engine={quiz_engine} 
+                                quiz_role={quiz_role} 
+                                playerId={game_status[`${quiz_role}_player_id`]} 
+                                answered={!!game_status[`${quiz_role}_answered`]}></PlayerPanel>
 
-                    {quiz_role.indexOf(game_role) !== 0 ? (
-                        <button onClick={async () => {
-                            console.log(`game_status[${quiz_role}_player_id] ${game_status[`${quiz_role}_player_id`]}`)
-                            if (game_status[`${quiz_role}_player_id`]) {
-                                delete game_status[`${quiz_role}_player_id`];
+                            {/* {quiz_role.indexOf(game_role) !== 0 ? (
+                                <button onClick={async () => {
+                                    console.log(`game_status[${quiz_role}_player_id] ${game_status[`${quiz_role}_player_id`]}`)
+                                    if (game_status[`${quiz_role}_player_id`]) {
+                                        delete game_status[`${quiz_role}_player_id`];
 
-                                setState({});
-                            }
-                            else {
-                                const new_player_id = shortid.generate();
-    
-                                const player_role = await quiz_engine.assignQuizRole(new_player_id);
-                            }
-                        }} style={{display: 'block'}}>{!game_status[`${quiz_role}_player_id`] ? 'Join' : 'Leave'} {_.upperFirst(quiz_role)}</button>
-                    ) : null}
+                                        setState({});
+                                    }
+                                    else {
+                                        const new_player_id = shortid.generate();
+            
+                                        const player_role = await quiz_engine.assignQuizRole(new_player_id);
+                                    }
+                                }} style={{display: 'block'}}>{!game_status[`${quiz_role}_player_id`] ? 'Join' : 'Leave'} {_.upperFirst(quiz_role)}</button>
+                            ) : null}
 
-                    {game_status[`${quiz_role}_player_id`] ? (
-                        <button onClick={async () => {
-                            const answer = Math.floor(Math.random() * 4);
-    
-                            if (game_role === 'host') {
-                                if (quiz_role === 'host') {
-                                    await quiz_engine.sendAnswer(answer, game_status[`${quiz_role}_player_id`]);
-                                }
-                                else {
-                                    quiz_engine._onPlayerAnswer(answer, game_status[`${quiz_role}_player_id`]);
-                                }
-                            }
-                            else if (game_role === 'player') {
-                                // simulate receing
-                            }
-    
-                            console.log('quiz_engine', quiz_engine)
-    
-                            // setState({});
-                        }} style={{display: 'block'}}>{_.upperFirst(quiz_role)} Answer</button>
-                    ) : null}
+                            {game_status[`${quiz_role}_player_id`] ? (
+                                <button onClick={async () => {
+                                    const answer = Math.floor(Math.random() * 4);
+            
+                                    if (game_role === 'host') {
+                                        if (quiz_role === 'host') {
+                                            await quiz_engine.sendAnswer(answer, game_status[`${quiz_role}_player_id`]);
+                                        }
+                                        else {
+                                            quiz_engine._onPlayerAnswer(answer, game_status[`${quiz_role}_player_id`]);
+                                        }
+                                    }
+                                    else if (game_role === 'player') {
+                                        // simulate receing
+                                    }
+            
+                                    console.log('quiz_engine', quiz_engine)
+            
+                                    // setState({});
+                                }} style={{display: 'block'}}>{_.upperFirst(quiz_role)} Answer</button>
+                            ) : null} */}
+                        </div>
+                    )}
                 </div>
-            )}
+            </div>
+            <div style={{flexGrow : 1, display: 'flex', border: '1px solid red', height: '-webkit-fill-available'}}>
+                {/* <div style={{border: '1px solid green', flexGrow: 1, margin: 'auto'}}>1</div> */}
+                <QuestinPanel question_answers={[]} />
+            </div>
         </div>
     )
 }
