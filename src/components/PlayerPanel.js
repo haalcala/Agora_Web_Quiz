@@ -5,20 +5,20 @@ import {Col} from 'reactstrap';
 import _ from 'lodash';
 
 export default function PlayerPanel(props) {
-    const {quiz_role, game_status} = props;
-
-    console.log(`[${quiz_role}]:: `, 'PlayerPanel:: props', props);
-
+    const {quiz_role, game_context} = props;
+    const {game_status} = game_context;
 
     const [state, setState] = useState({joined: false});
     const [state2, setState2] = useState({count: 0});
+    
+    console.log(`[${quiz_role}]:: `, 'PlayerPanel:: props', props, 'state', state);
 
     console.log(`[${quiz_role}]:: `, 'state.joined', state.joined);
 
     let just_joined = false;
 
-    if (!!state.joined != !!props.playerId) {
-        state.joined = !!props.playerId;
+    if (state.playerId != props.playerId) {
+        state.playerId = props.playerId;
 
         // if (state.joined) {
             just_joined = true;
@@ -39,15 +39,15 @@ export default function PlayerPanel(props) {
     // console.log(`[${quiz_role}]:: `, 'state2, setState2', state2, setState2);
 
     useEffect(() => {
+        console.log(`[${quiz_role}]:: `, 'useEffect:: 111 props', props, 'just_joined', just_joined);
         
-        setTimeout(() => {
-            console.log(`[${quiz_role}]:: `, 'useEffect:: props', props);
-            console.log(`[${quiz_role}]:: `, 'useEffect:: just_joined', just_joined);
-            setState({...state})
-        }, 600);
-    }, [props.playerId + props.my_answer]);
+        // setTimeout(() => {
+        //     console.log(`[${quiz_role}]:: `, 'useEffect:: 222 props', props, 'just_joined', just_joined);
+        //     setState({...state})
+        // }, 1000);
+    }, []);
 
-    const label_style = {_border: "1px solid red"};
+    console.log('player label classes', ['player-label', just_joined ? 'player_joined' : ''].join(' '))
 
     return (
         <div className={["player-icon", props.playerId ? 'shadow-drop-center' : ''].join(' ')} style={{_border: "1px dashed green"}}>
@@ -55,8 +55,8 @@ export default function PlayerPanel(props) {
                 <img src={require("./player.jpg")} 
                     style={{display: "block", width: "-webkit-fill-available", paddingTop: "1em"}}/>
             </div>
-            <div className={['player-label', just_joined ? 'player_joined' : ''].join(' ')} style={label_style}>
-                {props.playerId && `${_.upperFirst(quiz_role)} ${props.playerId == game_status[`${quiz_role}_player_id`] && '(ME)' || ''}` || "..."}
+            <div className={['player-label', just_joined ? 'player_joined' : ''].join(' ')}>
+                {props.playerId && `${_.upperFirst(quiz_role)} ${props.playerId == game_context.PLAYER_ID && '(ME)' || ''}` || "..."}
             </div>
             <div className={['player_answer_tab', !!props.answered ? 'player_new_answer' : '', just_answered ? 'rotate-scale-up' : ' '].join(' ')} style={{}}>
                 {(props.answered && 'ABCD'.charAt(props.my_answer)) || null}

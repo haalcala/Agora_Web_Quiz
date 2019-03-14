@@ -54,7 +54,6 @@ code {
     animation-timing-function: ease;
     border: 5px solid lightgray;
     background: white;
-    opacity: 1;
 }
 
 .player_joined {

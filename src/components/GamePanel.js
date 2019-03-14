@@ -56,7 +56,7 @@ export default function(props) {
             game_context.onPlayerJoin = (playerId) => {
                 console.log(`[GamePanel.js]:: onPlayerJoin`, playerId);
 
-                setState({});
+                // setState({});
             };
         }
     }, [props.game_context]);
@@ -69,19 +69,28 @@ export default function(props) {
                 <div key={quiz_role} style={{margin: "auto", border: '1px dashed green', marginTop: '0px'}}>
                     <PlayerPanel 
                         my_answer={game_context[`${quiz_role}_answer`]}
-                        game_status={game_status} 
+                        game_context={game_context} 
                         quiz_role={quiz_role} 
                         playerId={game_status[`${quiz_role}_player_id`]} 
                         answered={!!game_status[`${quiz_role}_answered`]}></PlayerPanel>
 
                     {quiz_role.indexOf(game_role) !== 0 ? (
-                        <button onClick={() => {
-                            const new_player_id = shortid.generate();
+                        <button onClick={async () => {
+                            console.log(`game_status[${quiz_role}_player_id] ${game_status[`${quiz_role}_player_id`]}`)
+                            if (game_status[`${quiz_role}_player_id`]) {
+                                delete game_status[`${quiz_role}_player_id`];
+                            }
+                            else {
+                                const new_player_id = shortid.generate();
+    
+                                const player_role = await game_context.assignQuizRole(new_player_id);
+                            }
 
-                            game_context.assignQuizRole(new_player_id);
+                            // if (player_role) {
+                                setState({})
+                            // }
 
-                            setState({});
-                        }} style={{display: 'block'}}>{!state[`${quiz_role}_player_id`] ? 'Join' : 'Leave'} {_.upperFirst(quiz_role)}</button>
+                        }} style={{display: 'block'}}>{!game_status[`${quiz_role}_player_id`] ? 'Join' : 'Leave'} {_.upperFirst(quiz_role)}</button>
                     ) : null}
 
                     <button onClick={() => {

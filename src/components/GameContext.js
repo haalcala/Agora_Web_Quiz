@@ -96,5 +96,7 @@ export default class GameContext {
                 this.onPlayerJoin(new_player_id);
             }
         });
+
+        return player_role;
     }
 }
