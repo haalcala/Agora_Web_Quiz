@@ -101,9 +101,10 @@ export default function(props) {
 
                             await quiz_engine.sendAnswer(answer, game_status[`${quiz_role}_player_id`]);
 
+                            // simulate receing
                             setImmediate(() => {
-                                if (this.onPlayerAnswer) {
-                                    this.onPlayerAnswer(answer, game_status[`${quiz_role}_player_id`]);
+                                if (quiz_engine.onPlayerAnswer) {
+                                    quiz_engine.onPlayerAnswer(answer, game_status[`${quiz_role}_player_id`]);
                                 }
                             });    
                         }

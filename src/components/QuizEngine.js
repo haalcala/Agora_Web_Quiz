@@ -38,10 +38,12 @@ export default class QuizEngine {
         console.log('[QuizEngine.js|constructor]('+game_role+'):: game_status', game_status);
     }
 
-    onPlayerJoin = () => {};
-    onPlayerLeave = () => {};
+    onPlayerJoin = async () => {};
+    onPlayerLeave = async () => {};
     
-    onPlayerAnswer = () => {};
+    onPlayerAnswer = async () => {};
+
+    onGameStatusUpdate = async () => {};
 
     createGame = async () => {
         const {game_role, game_status} = this;
@@ -54,7 +56,7 @@ export default class QuizEngine {
         }
 
         return game_status.GAME_ID;
-    }
+    };
 
     joinGame = async (game_id) => {
         const {game_role, game_status} = this;
@@ -69,11 +71,11 @@ export default class QuizEngine {
         else {
             throw new Error(`Invalid game role \'${game_role}\'`)
         }
-    }
+    };
 
     leaveGame =  async () => {
         
-    }
+    };
 
     sendAnswer = async (answer, playerId) => {
         if (answer >= 0 && answer < 4) {
@@ -114,5 +116,5 @@ export default class QuizEngine {
         });
 
         return player_role;
-    }
+    };
 }
