@@ -86,6 +86,8 @@ export default function(props) {
                             console.log(`game_status[${quiz_role}_player_id] ${game_status[`${quiz_role}_player_id`]}`)
                             if (game_status[`${quiz_role}_player_id`]) {
                                 delete game_status[`${quiz_role}_player_id`];
+
+                                setState({});
                             }
                             else {
                                 const new_player_id = shortid.generate();
@@ -95,28 +97,27 @@ export default function(props) {
                         }} style={{display: 'block'}}>{!game_status[`${quiz_role}_player_id`] ? 'Join' : 'Leave'} {_.upperFirst(quiz_role)}</button>
                     ) : null}
 
-                    <button onClick={async () => {
-                        if (game_role === 'host') {
+                    {game_status[`${quiz_role}_player_id`] ? (
+                        <button onClick={async () => {
                             const answer = Math.floor(Math.random() * 4);
-
-                            await quiz_engine.sendAnswer(answer, game_status[`${quiz_role}_player_id`]);
-
-                            // simulate receing
-                            setImmediate(() => {
-                                if (quiz_engine.onPlayerAnswer) {
-                                    quiz_engine.onPlayerAnswer(answer, game_status[`${quiz_role}_player_id`]);
+    
+                            if (game_role === 'host') {
+                                if (quiz_role === 'host') {
+                                    await quiz_engine.sendAnswer(answer, game_status[`${quiz_role}_player_id`]);
                                 }
-                            });    
-                        }
-                        else {
-                            quiz_engine.game_status[`${quiz_role}_answered`] = !state[`${quiz_role}_answered`];
-                            quiz_engine.my_answer = quiz_engine[`${quiz_role}_answer`] = Math.floor(Math.random() * 4);
-                        }
-
-                        console.log('quiz_engine', quiz_engine)
-
-                        setState({});
-                    }} style={{display: 'block'}}>{_.upperFirst(quiz_role)} Answer</button>
+                                else {
+                                    quiz_engine._onPlayerAnswer(answer, game_status[`${quiz_role}_player_id`]);
+                                }
+                            }
+                            else if (game_role === 'player') {
+                                // simulate receing
+                            }
+    
+                            console.log('quiz_engine', quiz_engine)
+    
+                            // setState({});
+                        }} style={{display: 'block'}}>{_.upperFirst(quiz_role)} Answer</button>
+                    ) : null}
                 </div>
             )}
         </div>

@@ -15,4 +15,6 @@ export default class Util {
     static GAME_STATUS_ENDED = 3;
 
     static QUIZ_STATUS_TEXT = ["Game Initialised", "Wating for players", "Quiz Started", 'Quiz Ended'];
+
+    static PLAYER_KEYS = _.times(3, x => `player${x+1}`); // [player1, player2, player3]
 }

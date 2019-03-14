@@ -168,11 +168,11 @@ code {
     border-radius: 3px;
     width: 1em;
     text-align: center;
-    display: none;
+    /* display: none; */
 }
 
 .player_new_answer {
-    display: block;
+    display: inherit;
 }
 
 .rotate-scale-down-diag-2 {
@@ -181,8 +181,8 @@ code {
 }
 
 .rotate-scale-up {
-	-webkit-animation: rotate-scale-up 0.65s linear both;
-	        animation: rotate-scale-up 0.65s linear both;
+	-webkit-animation: rotate-scale-up 0.45s linear both;
+	        animation: rotate-scale-up 0.45s linear both;
 }
 
 .flip-2-hor-top-1 {
