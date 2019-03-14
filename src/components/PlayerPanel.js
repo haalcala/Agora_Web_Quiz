@@ -27,8 +27,8 @@ export default function PlayerPanel(props) {
 
     let just_answered;
 
-    if (!!state.answered != !!my_answer) {
-        state.answered = !!my_answer;
+    if (state.my_answer != my_answer) {
+        state.my_answer = my_answer;
         
         just_answered = !state.just_answered;
     }
