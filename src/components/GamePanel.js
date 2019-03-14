@@ -48,14 +48,19 @@ export default function(props) {
     const {game_context} = props;
     const {game_role, PLAYER_ID, game_status} = game_context;
 
-    console.log('[GamePanel.js]:: state', state);
+    console.log('[GamePanel.js]:: state', state, 'game_context', game_context);
 
-    if (game_role === "host") {
-        console.log(`[GamePanel.js]:: Setting up onPlayerJoin`);
-		game_context.onPlayerJoin = (...args) => {
-			console.log(`[GamePanel.js]:: onPlayerJoin`, ...args);
-		};
-    }
+    useEffect(() => {
+        if (game_role === "host") {
+            console.log(`[GamePanel.js]:: Setting up onPlayerJoin`);
+            game_context.onPlayerJoin = (playerId) => {
+                console.log(`[GamePanel.js]:: onPlayerJoin`, playerId);
+
+                setState({});
+            };
+        }
+    }, [props.game_context]);
+
 
     return (
         <div style={{display: "flex"}}>
@@ -66,7 +71,7 @@ export default function(props) {
                         my_answer={game_context[`${quiz_role}_answer`]}
                         game_status={game_status} 
                         quiz_role={quiz_role} 
-                        playerId={game_context[`${quiz_role}_player_id`]} 
+                        playerId={game_status[`${quiz_role}_player_id`]} 
                         answered={!!game_status[`${quiz_role}_answered`]}></PlayerPanel>
 
                     {quiz_role.indexOf(game_role) !== 0 ? (

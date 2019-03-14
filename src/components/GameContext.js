@@ -84,7 +84,8 @@ export default class GameContext {
             let player_key = 'player' + (n+1);
             
             if (!player_role && !game_status[player_key + "_player_id"]) {
-                game_status[player_key + "_player_id"] = player_role = new_player_id;
+                game_status[player_key + "_player_id"] = new_player_id;
+                player_role = player_key;
             }
         });
 
