@@ -7,7 +7,7 @@ import Util from '../utils/index';
 const {QUIZ_ROLE_HOST} = Util;
 
 export default props => {
-    const [state, setState] = useState({next_question_answers: []});
+    const [state, setState] = useState({next_question_answers: [], first_time_load: true});
 
     const {quiz_engine} = props;
 
@@ -62,8 +62,14 @@ export default props => {
         setState({...state, selected_answer: answer});
     };
 
+    if (state.first_time_load) {
+        setTimeout(() => {
+            setState({...state, first_time_load: false});
+        }, 3000);
+    }
+
     return (
-        <div className={"host-question-panel" + (state.show_panel ? " host-question-panel-expand scale-in-ver-top" : "")}>
+        <div className={'host-question-panel' + (state.first_time_load ? ' host-question-panel-first-time' : '') + (state.show_panel ? " host-question-panel-expand scale-in-ver-top" : "")}>
             {!state.show_panel ?
                 <div onClick={() => setState({...state, show_panel: true})}
                     style={{}}>
@@ -72,9 +78,19 @@ export default props => {
                 : 
                 <div style={{display: 'flex'}}>
                     <div style={{textAlign: 'left'}}>
-                        Host question panel
+                        <div>
+                            <div className='field'>
+                                <div className='label'>
+                                    Question Panel
+                                </div>
+                                <div className='label'>
+                                    Game ID: {quiz_engine.GAME_ID}
+                                </div>
+                            </div>
+                        </div>
 
-                        <div style={{textAlign: "left"}}>
+
+                        <div>
                             <div className='field'>
                                 <div className='label'>
                                     Question:

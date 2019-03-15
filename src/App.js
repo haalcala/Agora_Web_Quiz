@@ -30,22 +30,22 @@ console.log('App.js:: GAME_STATUS_WAIT_FOR_PLAYERS', GAME_STATUS_WAIT_FOR_PLAYER
 export default (props) => {
 	const [state, setState] = useState({
 		showModal: false,
-		quiz_engine : new QuizEngine('host')
+		// quiz_engine : new QuizEngine('host')
 	});
 
 	const {quiz_engine, game_role} = state;
 
-	// useEffect(() => {
-	// 	console.log("[App.js] useEffect::");
+	useEffect(() => {
+		console.log("[App.js] useEffect::");
 
-	// 	if (state.game_role) {
-	// 		setTimeout(() => {
-	// 			const quiz_engine = new QuizEngine(state.game_role);
+		if (state.game_role) {
+			setTimeout(() => {
+				const quiz_engine = new QuizEngine(state.game_role);
 
-	// 			setState({...state, quiz_engine});
-	// 		}, 1000);
-	// 	}
-	// }, [state.game_role]);
+				setState({...state, quiz_engine});
+			}, 2000);
+		}
+	}, [state.game_role]);
 
 	// setTimeout(() => {
 	// 	const quiz_engine = new QuizEngine('host');
@@ -76,7 +76,7 @@ export default (props) => {
 				{quiz_engine ? 
 					<GamePanel quiz_engine={quiz_engine}/>
 					: 
-					<div className={game_role ? 'bounce-out-top' : 'slide-in-elliptic-top-fwd'} style={{height: '-webkit-fill-available', _border: '1px solid red', display:'flex', flexDirection:'column', justifyContent:'space-around'}}>
+					<div className={game_role ? 'bounce-out-top' : 'slide-in-elliptic-top-fwd'} style={{height: '40em', _border: '1px solid red', display:'flex', flexDirection:'column', justifyContent:'space-around'}}>
 						<div className="main-menu-item" onClick={() => setState({...state, game_role: 'host'})}>Host</div>
 						<div className="main-menu-item" onClick={() => setState({...state, game_role: 'player'})}>Participate</div>
 						<div className="main-menu-item" onClick={() => setState({...state, game_role: 'audience'})}>Watch</div>
@@ -84,7 +84,9 @@ export default (props) => {
 				}
 			</Container>
 
-			<MenuPanel quiz_engine={quiz_engine} />
+			{quiz_engine ? 
+				<MenuPanel quiz_engine={quiz_engine} />
+				: null}
 		</div>
 	);
 }
