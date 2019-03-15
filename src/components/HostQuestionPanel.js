@@ -72,41 +72,54 @@ export default props => {
 
     return (
         <div className="host-question-panel">
-            Host question panel
+            {!state.show_panel ?
+                <div onClick={() => setState({...state, show_panel: true})}
+                    style={{width: '100%', height: '100%'}}>
+                    ⌵ Next Question ⌵
+                    </div>
+                : 
+                <div style={{display: 'flex'}}>
+                    <div>
+                        Host question panel
 
-            <div style={{textAlign: "left"}}>
-                <div className='field'>
+                        <div style={{textAlign: "left"}}>
+                            <div className='field'>
 
-                </div>
-                <div className='label'>
-                    Question:
-                </div>
-                <div className='control'>
-                    <textarea onChange={handleSetQuestion} style={{width: "-webkit-fill-available", height: "10em"}}>{state.question}</textarea>
-                </div>
-            </div>
-
-            <div className="field">
-                <label className="label">Answer Choices</label>
-                {_.times(4).map(id => {
-                    return (
-                        <div key={id} className="control">
-                            Option {'ABCD'.charAt(id)}: <textarea key={id} onChange={e => handleSetQuestionOptions(id, e.target.value)} value={state.next_question_answers[id]} className="input" type="text" placeholder={`Input Question Answer Option ${'ABCD'.charAt(id)}`} />
+                            </div>
+                            <div className='label'>
+                                Question:
+                            </div>
+                            <div className='control'>
+                                <textarea onChange={handleSetQuestion} style={{width: "-webkit-fill-available", height: "10em"}}>{state.question}</textarea>
+                            </div>
                         </div>
-                    )
-                })}
-            </div>
 
-            <div className="field">
-                &nbsp;
-            </div>
-            <div className="field">
-                <div className="control">
-                    <button onClick={handleSendNextQuestion} className={"button " + ((state.quizIsOn && state.quizRole == QUIZ_ROLE_HOST) && ' is-link' || '')}>Send Question</button>
-                    <button onClick={handleSendQuestionAnswer} className={"button " + ((state.quizIsOn && state.quizRole == QUIZ_ROLE_HOST) && ' is-link' || '')}>Give Answer</button>
+                        <div className="field">
+                            <label className="label">Answer Choices</label>
+                            {_.times(4).map(id => {
+                                return (
+                                    <div key={id} className="control">
+                                        Option {'ABCD'.charAt(id)}: <textarea key={id} onChange={e => handleSetQuestionOptions(id, e.target.value)} value={state.next_question_answers[id]} className="input" type="text" placeholder={`Input Question Answer Option ${'ABCD'.charAt(id)}`} />
+                                    </div>
+                                )
+                            })}
+                        </div>
+
+                        <div className="field">
+                            &nbsp;
+                        </div>
+                        <div className="field">
+                            <div className="control" style={{display: 'flex', justifyContent: 'space-around'}}>
+                                <button onClick={handleSendNextQuestion} className={"button " + ((state.quizIsOn && state.quizRole == QUIZ_ROLE_HOST) && ' is-link' || '')}>Send Question</button>
+                                <button onClick={handleSendQuestionAnswer} className={"button " + ((state.quizIsOn && state.quizRole == QUIZ_ROLE_HOST) && ' is-link' || '')}>Give Answer</button>
+                            </div>
+                            <div>
+                            <button onClick={() => setState({...state, show_panel: false})} className={"button " + ((state.quizIsOn && state.quizRole == QUIZ_ROLE_HOST) && ' is-link' || '')}>Cancel</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            }
         </div>
-
     )
 };

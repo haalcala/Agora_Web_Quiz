@@ -216,7 +216,8 @@ code {
 .host-question-panel {
     border: 1px solid green;
     position: absolute;
-    top: 100px;
+    top: 10px;
+    left: 10px;
     width: 300px;
     background: white;
     padding: 1em;
