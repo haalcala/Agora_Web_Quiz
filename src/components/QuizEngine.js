@@ -19,6 +19,8 @@ const {
     GAME_STATUS_STARTED, 
     GAME_STATUS_ENDED} = Util;
 
+const SHARE_ID = 2;
+
 export default class QuizEngine {
     PLAYER_ID = shortid.generate();
 
@@ -81,17 +83,20 @@ export default class QuizEngine {
      * Only applies to 'host'
      */
 	setGameStatus = async () => {
+        console.log('[QuizEngine.js] setGameStatus::',);
+
 		const { game_status, signal } = this;
         
         game_status.requestId = shortid.generate();
 
 		let result = await this.setChannelAttribute('game_status', JSON.stringify(game_status));
 
-		console.log('setGameStatus:: 2222 result', result);
+		console.log('[QuizEngine.js] setGameStatus:: 2222 result', result);
 	};
 
 	subscribeEvents = () => {
-		const { signal } = this;
+        const { signal, game_status } = this;
+        const { PLAYER_ID } = game_status;
 
 		console.log('signal', signal);
 
@@ -450,6 +455,8 @@ export default class QuizEngine {
         this.game_status.question = question;
         this.game_status.question_answers = answer_options;
 
+        await this.setGameStatus();
+
         this.onGameStatusUpdate();
     };
 
@@ -466,6 +473,8 @@ export default class QuizEngine {
             else if (this.game_role.indexOf("player") === 0) {
 
             }
+
+            await this.setGameStatus();
 
             this.onGameStatusUpdate();
         }
