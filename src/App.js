@@ -15,6 +15,7 @@ import base64Encode from './utils/base64'
 import GamePanel from './components/GamePanel'
 import SignalingClient from './lib/SignalingClient';
 
+import HostQuestionPanel from './components/HostQuestionPanel'
 import QuizEngine from './components/QuizEngine'
 import ModalExample from './components/ModalExample'
 
@@ -75,7 +76,8 @@ export default (props) => {
 				</Row>
 			</Container> */}
 
-			<Container>	
+
+			<Container style={{height: '100%'}}>	
 				{quiz_engine ? 
 					<GamePanel quiz_engine={quiz_engine}/>
 					: 
@@ -86,6 +88,8 @@ export default (props) => {
 					</div>
 				}
 			</Container>
+			
+			<HostQuestionPanel />
 		</div>
 	);
 }

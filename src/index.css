@@ -15,11 +15,13 @@ html, body {
     margin: 0;
 }
 
+#root {
+    height: 100%;
+}
 
-#app {
+.App {
     height: 100%;
     min-height: 100%;
-    background: gray;
 }
 
 code {
@@ -67,6 +69,12 @@ code {
     to {
         bottom: 2em;
     }
+}
+
+.players-panel {
+    display: flex;
+    padding: 1em;
+    height: 330px;
 }
 
 .player-label {
@@ -142,7 +150,7 @@ code {
 
 .game_role {
     _border: 1px solid green;
-    background: white;
+    /* background: white; */
     position: relative;
     /* margin: auto; */
     display: block;
@@ -192,13 +200,26 @@ code {
 }
 
 .game-panel {
-    border: 1px solid blue;
-    height: -webkit-fill-available;
-    width: -webkit-fill-available;
+    /* border: 1px solid blue; */
+    height: 100%;
+    /* width: -webkit-fill-available; */
     display: flex;
-    flex-direction: column-reverse;
-    justify-content: flex-end;
+    flex-direction: column;
+    /* justify-content: flex-end; */
+    /* background: white; */
+}
+
+.label { 
+    font-weight: bold;
+}
+
+.host-question-panel {
+    border: 1px solid green;
+    position: absolute;
+    top: 100px;
+    width: 300px;
     background: white;
+    padding: 1em;
 }
 
 .rotate-scale-down-diag-2 {
