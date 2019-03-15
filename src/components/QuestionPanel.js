@@ -23,7 +23,7 @@ export default props => {
 
     console.log('QuestionPanel.render::');
 
-    const {answer_from_host, question, question_answers, selected_answer} = props;
+    const {answer_from_host, question, question_answers, selected_answer} = game_status;
 
     return (
         // <div className="card" style={{ border: "1px solid red", width: "100%", padding: "1em"}}>
@@ -54,27 +54,27 @@ export default props => {
         //         </div>
         //     </div>
         // </div>
-        <div style={{ _border: "1px dashed red", width: "100%", padding: "1em", display: 'flex', flexDirection: 'column'}}>
-            <div style={{border: '1px solid green', height: '50%', marginBottom: '1em'}}>
-                <div className="" style={{width: "50em", margin: "auto", display: "block"}}>
-                        <h1>Question:</h1>
-                        <h1 style={{textAlign: "center"}}>
-                            {question}
-                        </h1>
-                        {answer_from_host ? (
-                            <div>
-                                <h1>Answer:</h1>
-                                <h1 style={{textAlign: "left", textDecoration: "underline", marginLeft: "3em"}}>
-                                    {`${'ABCD'.charAt(answer_from_host)}. ${question_answers[answer_from_host]}`}
-                                </h1>
-                            </div>
-                        ) : ""}
-                    </div>
+        <div style={{ _border: "1px dashed red", width: "100%", padding: "1em", display: (game_status.question ? 'flex' : 'none'), flexDirection: 'column'}}>
+            <div style={{_border: '1px solid green', height: '50%', marginBottom: '1em'}}>
+                <div className="" style={{width: "50em", margin: "auto", display: (game_status.question ? 'block' : 'none')}}>
+                    <h1>Question:</h1>
+                    <h1 style={{textAlign: "center"}}>
+                        {question}
+                    </h1>
+                    {answer_from_host ? (
+                        <div>
+                            <h1>Answer:</h1>
+                            <h1 style={{textAlign: "left", textDecoration: "underline", marginLeft: "3em"}}>
+                                {`${'ABCD'.charAt(answer_from_host)}. ${question_answers && question_answers[answer_from_host]}`}
+                            </h1>
+                        </div>
+                    ) : ""}
+                </div>
             </div>
-            <div style={{border: '1px solid green', height: '50%'}}>
+            <div style={{_border: '1px solid green', height: '50%'}}>
                 <div>
                 {_.times(4).map(i => {
-                    return (<AnswerItem key={i} selected_answer={selected_answer} answer_from_host={answer_from_host} i={i} option={question_answers[i]} selectAnswer={selectAnswer}></AnswerItem>)
+                    return (<AnswerItem key={i} selected_answer={selected_answer} answer_from_host={answer_from_host} i={i} option={question_answers && question_answers[i]} selectAnswer={selectAnswer}></AnswerItem>)
                 })}
                 </div>
             </div>
