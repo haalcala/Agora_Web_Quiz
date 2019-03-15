@@ -80,7 +80,7 @@ export default props => {
                                     Question:
                                 </div>
                                 <div className='control'>
-                                    <textarea onChange={handleSetQuestion} style={{width: "-webkit-fill-available", height: "10em"}}>{state.question}</textarea>
+                                    <textarea onChange={handleSetQuestion} style={{width: "-webkit-fill-available", height: "10em"}} value={state.question}></textarea>
                                 </div>
                             </div>
                         </div>

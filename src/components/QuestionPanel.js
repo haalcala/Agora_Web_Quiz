@@ -9,9 +9,13 @@ export default props => {
 		options : [],
     });
     
-    const {game_status} = props;
+    const {game_status, game_role} = props;
 
 	const selectAnswer = async (answer) => {
+        if (game_role !== 'player') {
+            return;
+        }
+
         if (props.answer_from_host) {
             return;
         }
@@ -74,7 +78,16 @@ export default props => {
             <div style={{_border: '1px solid green', height: '50%'}}>
                 <div>
                 {_.times(4).map(i => {
-                    return (<AnswerItem key={i} selected_answer={selected_answer} answer_from_host={answer_from_host} i={i} option={question_answers && question_answers[i]} selectAnswer={selectAnswer}></AnswerItem>)
+                    return (
+                        <AnswerItem 
+                            isSelectable={game_role.indexOf('player')===0} 
+                            key={i} 
+                            selected_answer={selected_answer} 
+                            answer_from_host={answer_from_host} 
+                            i={i} 
+                            option={question_answers && question_answers[i]} 
+                            selectAnswer={selectAnswer.bind(null, i)} />
+                        )
                 })}
                 </div>
             </div>
@@ -83,12 +96,18 @@ export default props => {
 }
 
 function AnswerItem(props) {
-    const {selected_answer, answer_from_host, i, option, selectAnswer} = props;
+    const {isSelectable, selected_answer, answer_from_host, i, option, selectAnswer} = props;
 
     // console.log("selected_answer", selected_answer, "answer_from_host", answer_from_host, "i", i, "option", option, "selectAnswer", selectAnswer);
 
+    const classes = ['answer-item'];
+
+    if (isSelectable) {
+        classes.push('is-link')
+    }
+
     return (
-        <div className={"column answer-item is-link" + (selected_answer == i ? " selected": "")} onClick={() => selectAnswer(i)} >
+        <div className={classes.concat([selected_answer == i ? " selected": ""]).join(' ')} onClick={() => selectAnswer(i)} >
             <div style={{display: "inline", width: "1em"}}>
                 {answer_from_host ? (selected_answer == i ? (answer_from_host == selected_answer ? "✔︎" : "✘") : " ") : " "} 
             </div>

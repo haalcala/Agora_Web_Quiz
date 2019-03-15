@@ -114,12 +114,23 @@ code {
     white-space: nowrap;
     width: 100%;
     /* width: fit-content; */
-    border: none;
+    border-radius: 1em;
     background: none;
     font-size: 2.5em;
     text-align: left;
-    cursor: pointer;
+    margin-left: 2em;
+    margin-top: .1em;
+    width: 80%;
+}
 
+.answer-item-selectable {
+    border: 3px solid green;
+    cursor: pointer;
+}
+
+.answer-item-selectable:hover {
+    background: green;
+    color: white;
 }
 
 .selected {
