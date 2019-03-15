@@ -10,8 +10,13 @@ export default props => {
     const [state, setState] = useState({next_question_answers: []});
 
     useEffect(() => {
-
-    });
+        if (state.show_panel) {
+            if (props.onOpen) props.onOpen();
+        }
+        else {
+            if (props.onClose) props.onClose();
+        } 
+    }, [state.show_panel]);
 
     const handleSetQuestion = e => {
         setState({...state, question: e.target.value});
@@ -71,26 +76,25 @@ export default props => {
 
 
     return (
-        <div className="host-question-panel">
+        <div className={"host-question-panel" + (state.show_panel ? " host-question-panel-expand scale-in-ver-top" : "")}>
             {!state.show_panel ?
                 <div onClick={() => setState({...state, show_panel: true})}
-                    style={{width: '100%', height: '100%'}}>
-                    ⌵ Next Question ⌵
+                    style={{}}>
+                    <img style={{width: '64px', height: '64px'}} src={require('./quotes-icon-png-11.png')} />
                     </div>
                 : 
                 <div style={{display: 'flex'}}>
-                    <div>
+                    <div style={{textAlign: 'left'}}>
                         Host question panel
 
                         <div style={{textAlign: "left"}}>
                             <div className='field'>
-
-                            </div>
-                            <div className='label'>
-                                Question:
-                            </div>
-                            <div className='control'>
-                                <textarea onChange={handleSetQuestion} style={{width: "-webkit-fill-available", height: "10em"}}>{state.question}</textarea>
+                                <div className='label'>
+                                    Question:
+                                </div>
+                                <div className='control'>
+                                    <textarea onChange={handleSetQuestion} style={{width: "-webkit-fill-available", height: "10em"}}>{state.question}</textarea>
+                                </div>
                             </div>
                         </div>
 
@@ -106,15 +110,18 @@ export default props => {
                         </div>
 
                         <div className="field">
-                            &nbsp;
+                            <div className="control">
+                                <button style={{width: '100%'}} onClick={handleSendNextQuestion} className={"button " + ((state.quizIsOn && state.quizRole == QUIZ_ROLE_HOST) && ' is-link' || '')}>Send Question</button>
+                            </div>
                         </div>
                         <div className="field">
-                            <div className="control" style={{display: 'flex', justifyContent: 'space-around'}}>
-                                <button onClick={handleSendNextQuestion} className={"button " + ((state.quizIsOn && state.quizRole == QUIZ_ROLE_HOST) && ' is-link' || '')}>Send Question</button>
-                                <button onClick={handleSendQuestionAnswer} className={"button " + ((state.quizIsOn && state.quizRole == QUIZ_ROLE_HOST) && ' is-link' || '')}>Give Answer</button>
+                            <div className="control">
+                                <button style={{width: '100%'}} onClick={handleSendQuestionAnswer} className={"button " + ((state.quizIsOn && state.quizRole == QUIZ_ROLE_HOST) && ' is-link' || '')}>Give Answer</button>
                             </div>
-                            <div>
-                            <button onClick={() => setState({...state, show_panel: false})} className={"button " + ((state.quizIsOn && state.quizRole == QUIZ_ROLE_HOST) && ' is-link' || '')}>Cancel</button>
+                        </div>
+                        <div className='field'>
+                            <div className="control">
+                                <button style={{width: '100%'}} onClick={() => setState({...state, show_panel: false})} className={"button " + ((state.quizIsOn && state.quizRole == QUIZ_ROLE_HOST) && ' is-link' || '')}>Cancel</button>
                             </div>
                         </div>
                     </div>

@@ -13,24 +13,19 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { videoProfileList, audioProfileList, audioScenarioList, APP_ID, SHARE_ID } from './utils/settings'
 import base64Encode from './utils/base64'
 import GamePanel from './components/GamePanel'
-import SignalingClient from './lib/SignalingClient';
 
-import HostQuestionPanel from './components/HostQuestionPanel'
+import MenuPanel from './components/MenuPanel' 
+
 import QuizEngine from './components/QuizEngine'
-import ModalExample from './components/ModalExample'
 
-import { watchFile } from 'fs';
+import ModalExample from './components/ModalExample'
 
 import {Container, Row, Col} from 'reactstrap'
 
 import Util from './utils/index';
 const {QUIZ_STATUS_TEXT, QUIZ_ROLE_HOST, QUIZ_ROLE_PLAYER, QUIZ_ROLE_AUDIENCE, GAME_STATUS_INITIALISED, GAME_STATUS_WAIT_FOR_PLAYERS, GAME_STATUS_STARTED, GAME_STATUS_ENDED} = Util;
 
-const PLAYER_ID = shortid.generate();
-
-let GAME_ID = 'Wbo-OUgMQ';
-
-console.log('App.js:: PLAYER_ID', PLAYER_ID, 'GAME_STATUS_WAIT_FOR_PLAYERS', GAME_STATUS_WAIT_FOR_PLAYERS, 'GAME_STATUS_STARTED', GAME_STATUS_STARTED, 'GAME_STATUS_ENDED', GAME_STATUS_ENDED);
+console.log('App.js:: GAME_STATUS_WAIT_FOR_PLAYERS', GAME_STATUS_WAIT_FOR_PLAYERS, 'GAME_STATUS_STARTED', GAME_STATUS_STARTED, 'GAME_STATUS_ENDED', GAME_STATUS_ENDED);
 
 export default (props) => {
 	const [state, setState] = useState({
@@ -88,8 +83,8 @@ export default (props) => {
 					</div>
 				}
 			</Container>
-			
-			<HostQuestionPanel />
+
+			<MenuPanel quiz_engine={quiz_engine} />
 		</div>
 	);
 }

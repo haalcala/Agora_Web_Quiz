@@ -2,6 +2,8 @@
 import _ from 'lodash';
 import shortid from 'shortid';
 
+import SignalingClient from '../lib/SignalingClient';
+
 import Util from '../utils/index';
 const {PLAYER_KEYS, QUIZ_STATUS_TEXT, QUIZ_ROLE_HOST, QUIZ_ROLE_PLAYER, QUIZ_ROLE_AUDIENCE, GAME_STATUS_INITIALISED, GAME_STATUS_WAIT_FOR_PLAYERS, GAME_STATUS_STARTED, GAME_STATUS_ENDED} = Util;
 

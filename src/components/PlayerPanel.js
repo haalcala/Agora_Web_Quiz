@@ -4,7 +4,7 @@ import {Col} from 'reactstrap';
 
 import _ from 'lodash';
 
-export default function PlayerPanel(props) {
+export default function PlayerPanel(props) { 
     const {quiz_role, quiz_engine, answered, playerId, my_answer} = props;
     const {game_status} = quiz_engine;
 

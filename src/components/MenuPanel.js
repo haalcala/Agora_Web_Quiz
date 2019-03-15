@@ -1,0 +1,27 @@
+import React, {useState, useEffect} from 'react';
+
+import HostQuestionPanel from './HostQuestionPanel'
+import CameraConfigPanel from './CameraConfigPanel'
+
+export default props => {
+    const [state, setState] = useState({open_panel: ''});
+
+    return (
+        <div style={{_border: '1px solid blue'}}>
+            {state.open_panel === 'question' || !state.has_others_open ? 
+                <HostQuestionPanel 
+                    onOpen={() => setState({...state, open_panel: 'question', has_others_open: true})} 
+                    onClose={() => setState({...state, open_panel: '', has_others_open: false})} 
+                    />
+                : null
+            }
+
+            {state.open_panel === 'camera' || !state.has_others_open ? 
+                <CameraConfigPanel 
+                    onOpen={() => setState({...state, open_panel: 'camera', has_others_open: true})} 
+                    onClose={() => setState({...state, open_panel: '', has_others_open: false})} 
+                />
+            : null}
+        </div>
+    );
+};
