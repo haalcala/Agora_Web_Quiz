@@ -5,7 +5,19 @@ import shortid from 'shortid';
 import SignalingClient from '../lib/SignalingClient';
 
 import Util from '../utils/index';
-const {PLAYER_KEYS, QUIZ_STATUS_TEXT, QUIZ_ROLE_HOST, QUIZ_ROLE_PLAYER, QUIZ_ROLE_AUDIENCE, GAME_STATUS_INITIALISED, GAME_STATUS_WAIT_FOR_PLAYERS, GAME_STATUS_STARTED, GAME_STATUS_ENDED} = Util;
+
+import {APP_ID} from '../utils/settings';
+
+const {
+    PLAYER_KEYS, 
+    QUIZ_STATUS_TEXT, 
+    QUIZ_ROLE_HOST, 
+    QUIZ_ROLE_PLAYER, 
+    QUIZ_ROLE_AUDIENCE, 
+    GAME_STATUS_INITIALISED, 
+    GAME_STATUS_WAIT_FOR_PLAYERS, 
+    GAME_STATUS_STARTED, 
+    GAME_STATUS_ENDED} = Util;
 
 export default class QuizEngine {
     PLAYER_ID = shortid.generate();
@@ -38,6 +50,10 @@ export default class QuizEngine {
         }
 
         console.log('[QuizEngine.js|constructor]('+game_role+'):: game_status', game_status);
+
+        this.signal = new SignalingClient(APP_ID);
+
+        console.log('this.signal', this.signal);
     }
 
     /**
@@ -68,10 +84,30 @@ export default class QuizEngine {
     createGame = async () => {
         console.log('[QuizEngine.js] createGame::',);
 
-        const {game_role, game_status} = this;
+        const {game_role, game_status, signal, PLAYER_ID} = this;
 
         if (game_role === QUIZ_ROLE_HOST) {
             game_status.GAME_ID = shortid.generate();
+
+            await signal.login(PLAYER_ID);
+
+            const channel = await signal.join(game_status.GAME_ID);
+
+            this.channel = channel;
+
+            let result = await signal.invoke('io.agora.signal.channel_query_userlist', { name: game_status.GAME_ID });
+
+            console.log('1111 result', result)
+
+            if (result.list && result.list.length === 1 && result.list[0][0] === PLAYER_ID) {
+                this.channel = channel;
+    
+                game_status.state = GAME_STATUS_WAIT_FOR_PLAYERS;
+    
+                game_status.host_player_id = PLAYER_ID;
+    
+                console.log('Created a new game successfully.');
+            }
         }
         else {
             throw new Error('Only \'host\' can create game.');

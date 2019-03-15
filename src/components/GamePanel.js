@@ -53,29 +53,32 @@ export default function(props) {
     console.log('[GamePanel.js]:: state', state, 'quiz_engine', quiz_engine);
 
     useEffect(() => {
-        if (game_role === "host") {
-            console.log(`[GamePanel.js]:: Setting up onPlayerJoin`);
-
-            quiz_engine.onPlayerJoin = (playerId) => {
-                console.log(`[GamePanel.js]:: onPlayerJoin`, playerId);
-
-                setState({});
-            };
-
-            quiz_engine.onPlayerAnswer = (answer, playerId) => {
-                console.log(`[GamePanel.js]:: onPlayerAnswer`, answer, playerId);
-
-                setState({});
-            };
-
-            quiz_engine.onGameStatusUpdate = () => {
-                console.log(`[GamePanel.js]:: onGameStatusUpdate`);
-
-                setState({});
-            };
-        }
+        (async () => {
+            if (game_role === "host") {
+                console.log(`[GamePanel.js]:: Setting up onPlayerJoin`);
+    
+                quiz_engine.onPlayerJoin = (playerId) => {
+                    console.log(`[GamePanel.js]:: onPlayerJoin`, playerId);
+    
+                    setState({});
+                };
+    
+                quiz_engine.onPlayerAnswer = (answer, playerId) => {
+                    console.log(`[GamePanel.js]:: onPlayerAnswer`, answer, playerId);
+    
+                    setState({});
+                };
+    
+                quiz_engine.onGameStatusUpdate = () => {
+                    console.log(`[GamePanel.js]:: onGameStatusUpdate`);
+    
+                    setState({});
+                };
+    
+                await quiz_engine.createGame();
+            }
+        })();
     }, [props.quiz_engine]);
-
 
     return (
         <div className='game-panel slide-in-top'>
