@@ -40,7 +40,6 @@ export default class QuizEngine {
         this.game_role =  game_role;
         
         if (game_role === QUIZ_ROLE_HOST) {
-            game_status.GAME_ID = this.GAME_ID = shortid.generate();
             game_status.host_player_id = this.PLAYER_ID;
         }
         else if ([QUIZ_ROLE_PLAYER, QUIZ_ROLE_AUDIENCE].indexOf(game_role) > -1) {
@@ -107,7 +106,7 @@ export default class QuizEngine {
         const {game_role, game_status, signal, PLAYER_ID} = this;
 
         if (game_role === QUIZ_ROLE_HOST) {
-            game_status.GAME_ID = shortid.generate();
+            this.GAME_ID = game_status.GAME_ID = shortid.generate();
 
             console.log('[QuizEngine.js] createGame:: logging in as ', PLAYER_ID);
 
@@ -115,7 +114,7 @@ export default class QuizEngine {
 
             const channel = await signal.join(game_status.GAME_ID);
 
-            this.channel = channel;
+            console.log('[QuizEngine.js] createGame:: channel', channel);
 
             let result = await signal.invoke('io.agora.signal.channel_query_userlist', { name: game_status.GAME_ID });
 
