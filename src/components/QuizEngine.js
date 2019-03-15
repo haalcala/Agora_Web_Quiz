@@ -81,6 +81,26 @@ export default class QuizEngine {
     /**
      * Only applies to 'host'
      */
+	setGameStatus = async () => {
+		const { game_status, signal } = this;
+        
+        game_status.requestId = shortid.generate();
+
+		let result = await this.setChannelAttribute('game_status', JSON.stringify(game_status));
+
+		console.log('setGameStatus:: 2222 result', result);
+	};
+
+    /**
+     * Only applies to 'host'
+     */
+	setChannelAttribute = (key, val) => {
+		return this.signal.invoke('io.agora.signal.channel_set_attr', { channel: this.GAME_ID, name: key, value: val });
+    }
+
+    /**
+     * Only applies to 'host'
+     */
     createGame = async () => {
         console.log('[QuizEngine.js] createGame::',);
 
@@ -88,6 +108,8 @@ export default class QuizEngine {
 
         if (game_role === QUIZ_ROLE_HOST) {
             game_status.GAME_ID = shortid.generate();
+
+            console.log('[QuizEngine.js] createGame:: logging in as ', PLAYER_ID);
 
             await signal.login(PLAYER_ID);
 
@@ -107,6 +129,8 @@ export default class QuizEngine {
                 game_status.host_player_id = PLAYER_ID;
     
                 console.log('Created a new game successfully.');
+
+                await this.setGameStatus();
             }
         }
         else {
