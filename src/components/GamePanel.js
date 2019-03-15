@@ -67,6 +67,12 @@ export default function(props) {
 
                 setState({});
             };
+
+            quiz_engine.onGameStatusUpdate = () => {
+                console.log(`[GamePanel.js]:: onGameStatusUpdate`);
+
+                setState({});
+            };
         }
     }, [props.quiz_engine]);
 
@@ -75,7 +81,7 @@ export default function(props) {
         <div className='game-panel slide-in-top'>
             <div style={{flexGrow : 1, display: 'flex', _border: '1px solid red', height: '100%'}}>
                 {/* <div style={{border: '1px solid green', flexGrow: 1, margin: 'auto'}}>1</div> */}
-                <QuestinPanel question_answers={[]} />
+                <QuestinPanel question={game_status.question} question_answers={game_status.question_answers || []} />
             </div>
             <div className='players-panel'>
                 {/* <div>{_.upperFirst(game_role)} <div style={{display: 'block'}}/> PLAYER_ID {PLAYER_ID}</div> */}

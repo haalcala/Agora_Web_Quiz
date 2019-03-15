@@ -131,6 +131,10 @@ export default class QuizEngine {
     sendQuestion = async (question, answer_options) => {
         console.log('[QuizEngine.js] sendQuestion:: question', question, 'answer_options', answer_options);
 
+        this.game_status.question = question;
+        this.game_status.question_answers = answer_options;
+
+        this.onGameStatusUpdate();
     };
 
     /**
@@ -141,11 +145,13 @@ export default class QuizEngine {
 
         if (answer >= 0 && answer < 4) {
             if (this.game_role === "host") {
-
+                this.game_status.answer = answer;
             }
             else if (this.game_role.indexOf("player") === 0) {
 
             }
+
+            this.onGameStatusUpdate();
         }
         else {
             throw new Error("Answer can only be between 0 and 3, inclusive");
