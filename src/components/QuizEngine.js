@@ -90,6 +90,263 @@ export default class QuizEngine {
 		console.log('setGameStatus:: 2222 result', result);
 	};
 
+	subscribeEvents = () => {
+		const { signal } = this;
+
+		console.log('signal', signal);
+
+		signal.sessionEmitter.on('onMessageInstantReceive', async (account, uid, msg) => {
+			console.log('---===>>> signal.sessionEmitter.on(\'onMessageInstantReceive\':: account, uid, msg', account, uid, msg, typeof(msg));
+
+            // this.onReceiveMessage(account, msg, 'instant');
+
+            if (msg.charAt(0) === "{" && msg.charAt(msg.length-1) === "}") {
+                msg = JSON.parse(msg);
+            }
+
+            console.log('---- msg', msg, typeof(msg));
+            
+			const { state } = this;
+            const { game_status, quizRole } = state;
+
+            const [command, val] = typeof(msg) === "string" && msg.split(",") || [];
+
+            console.log('state', state, 'command', command, 'val', val);
+
+            if (quizRole === QUIZ_ROLE_HOST) {
+                if (command === 'answer') {
+                    _.times(4).map(i => {
+                        if (game_status[`player${i+1}_player_id`] === account) {
+                            state[`player${i+1}_answer`] = val;
+
+                            game_status[`player${i+1}_answered`] = true;
+    
+							console.log(`player${i+1}_answer`, val);
+							
+							this.setGameStatus();
+
+                            this.setState({});
+                        }
+					});
+					
+
+                }
+                else if (command === "assign_player") {
+                    if (game_status.host_player_id === PLAYER_ID) {
+                        let next_player;
+        
+                        _.times(3).map(i => {
+                            if (!next_player && !game_status['player' + (i + 1) + '_player_id']) {
+                                next_player = game_status['player' + (i + 1) + '_player_id'] = account;
+
+                                delete game_status[`player${i+1}_answered`];
+                            }
+                        });
+        
+                        console.log('next_player', next_player);
+        
+                        next_player && await this.setGameStatus();        
+                    }        
+                }
+            }
+            else if (quizRole === QUIZ_ROLE_AUDIENCE || quizRole === QUIZ_ROLE_PLAYER) {
+                if (msg.game_status) {
+                    console.log('setting new game_status');
+
+                    this.setState({game_status: msg.game_status});
+                }
+            }
+		});
+		signal.channelEmitter.on('onMessageChannelReceive', (account, uid, msg) => {
+			console.log('---===>>> signal.channelEmitter.on(\'onMessageChannelReceive\':: account, uid, msg', account, uid, msg);
+
+			// if (account !== signal.account) {
+			//     this.onReceiveMessage(signal.channel.name, msg, 'channel');
+			// }
+		});
+
+		signal.channelEmitter.on('onChannelUserLeaved', (account, uid) => {
+			console.log('---===>>> signal.channelEmitter.on(\'onChannelUserLeaved\':: account, uid', account, uid);
+
+			const { state } = this;
+			const { game_status } = state;
+
+			if (state.quizRole === QUIZ_ROLE_HOST) {
+				_.times(3).map(n => {
+					const player_key = `player${n}_player_id`;
+					if (game_status[player_key] === account) {
+                        console.log('removing player with account id', account);
+
+						delete game_status[player_key];
+						delete game_status[`player${n}_video_stream_id`];
+					}
+				});
+
+				this.setGameStatus();
+			}
+		});
+
+		signal.channelEmitter.on('onChannelUserJoined', async (account, uid) => {
+			console.log('---===>>> signal.channelEmitter.on(\'onChannelUserJoined\':: account, uid', account, uid);
+
+			const { state, signal } = this;
+			const { game_status } = state;
+
+			// console.log('game_status.state', game_status.state);
+
+            state.quizIsOn && state.quizRole === QUIZ_ROLE_HOST && await signal.sendMessage(account, JSON.stringify({game_status}));
+		});
+
+		signal.channelEmitter.on('onChannelAttrUpdated', async (key, val, op, ...args) => {
+            console.log('---===>>> signal.channelEmitter.on(\'onChannelAttrUpdated\':: key, val, op, ...args', key, val, op, ...args);
+
+            if (op === "set") {
+                return;
+            }
+
+
+			const { state } = this;
+
+            console.log('signal.channelEmitter.on(\'onChannelAttrUpdated\':: state', state);
+            
+            if (key === 'game_status') {
+                const game_status = val = JSON.parse(val);
+    
+                ['host', 'player1', 'player2', 'player3'].map(async game_role => {
+                    if (game_status[game_role + '_player_id'] == PLAYER_ID) {
+                        state.game_role = game_role;
+                    }
+                });
+
+                state.game_status = game_status;
+        
+                if (!state.video_stream_id && state.game_role) {
+                    this.handleJoin();
+                }
+
+                this.setupVideoPanels();
+
+                const new_state = {};
+
+                if (game_status.questionId != state.questionId) {
+                    new_state.answer_from_host = ""; 
+                    delete new_state.selected_answer;
+                }
+
+                ['question', 'question_answers'].map(prop => {
+                    new_state[prop] = game_status[prop];
+                });
+
+                new_state.answer_from_host = game_status.answer;
+
+                this.setState(new_state);
+            }
+            else if (key === 'video_stream_id' && state.quizRole === QUIZ_ROLE_HOST) {
+                const { game_status } = state;
+                const [game_role, video_stream_id] = val.split(',');
+
+                game_status[`${game_role}_video_stream_id`] = parseInt(video_stream_id);
+
+                delete state[`${game_role}_video_stream_id`];
+
+                this.setGameStatus();
+
+                this.setupVideoPanels();
+            }
+		});
+
+		this.rtcEngine.on('joinedchannel', (channel, uid, elapsed) => {
+			const { state } = this;
+			const { game_status } = state;
+
+			console.log('---===>>> this.rtcEngine.on(\'joinedchannel\'):: channel, uid, elapsed', channel, uid, elapsed);
+
+			state.video_stream_id = uid;
+
+			if (state.quizRole === QUIZ_ROLE_HOST) {
+				game_status.host_video_stream_id = uid;
+
+				this.setupVideoPanels();
+            }
+            else if (state.quizRole === QUIZ_ROLE_PLAYER && state.game_role) {
+                if (!game_status[state.game_role + '_video_stream_id'] && state.video_stream_id) {
+                    process.nextTick(() => {
+                        this.setChannelAttribute('video_stream_id', [state.game_role, state.video_stream_id].join(','));
+                    });
+                }
+            }
+		});
+
+		this.rtcEngine.on('userjoined', (uid, elapsed) => {
+			console.log('---===>>> this.rtcEngine.on(\'userjoined\'):: uid, elapsed', uid, elapsed);
+			if (uid === SHARE_ID && this.state.localVideoSource) {
+				return
+			}
+
+			this.setState({
+				users: this.state.users.push(uid)
+			});
+		});
+
+		this.rtcEngine.on('removestream', (uid, reason) => {
+			console.log('---===>>> this.rtcEngine.on(\'removestream\'):: uid, reason', uid, reason);
+			this.setState({
+				users: this.state.users.delete(this.state.users.indexOf(uid))
+			});
+		});
+
+		this.rtcEngine.on('leavechannel', () => {
+			console.log('---===>>> this.rtcEngine.on(\'leavechannel\')::');
+
+			const new_state = {
+				local: '', localVideoSource: '',
+				users: this.state.users.splice(0),
+				videos_on: []
+			};
+
+			console.log('---===>>> new_state', new_state);
+
+			this.setState(new_state);
+		});
+
+		this.rtcEngine.on('audiodevicestatechanged', () => {
+			console.log('---===>>> this.rtcEngine.on(\'audiodevicestatechanged\')::');
+
+			this.setState({
+				audioDevices: this.rtcEngine.getAudioRecordingDevices(),
+				audioPlaybackDevices: this.rtcEngine.getAudioPlaybackDevices()
+			});
+		});
+
+		this.rtcEngine.on('videodevicestatechanged', () => {
+			console.log("this.rtcEngine.on('videodevicestatechanged')::");
+
+			this.setState({
+				videoDevices: this.rtcEngine.getVideoDevices()
+			});
+		});
+
+		this.rtcEngine.on('audiovolumeindication', (
+			uid,
+			volume,
+			speakerNumber,
+			totalVolume
+		) => {
+			// console.log("this.rtcEngine.on('audiovolumeindication')::");
+			// console.log(`uid${uid} volume${volume} speakerNumber${speakerNumber} totalVolume${totalVolume}`)
+		});
+
+		this.rtcEngine.on('error', (...err) => {
+			console.log('---===>>> this.rtcEngine.on(\'error\')::');
+			console.error(...err)
+		});
+
+		this.rtcEngine.on('executefailed', funcName => {
+			console.log('this.rtcEngine.on(\'executefailed\')::');
+			console.error(funcName, 'failed to execute')
+		});
+    }
+    
     /**
      * Only applies to 'host'
      */
