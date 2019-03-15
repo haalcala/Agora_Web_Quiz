@@ -6,10 +6,13 @@ import CameraConfigPanel from './CameraConfigPanel'
 export default props => {
     const [state, setState] = useState({open_panel: ''});
 
+    const {quiz_engine} = props;
+
     return (
         <div style={{_border: '1px solid blue'}}>
             {state.open_panel === 'question' || !state.has_others_open ? 
                 <HostQuestionPanel 
+                    quiz_engine={quiz_engine}
                     onOpen={() => setState({...state, open_panel: 'question', has_others_open: true})} 
                     onClose={() => setState({...state, open_panel: '', has_others_open: false})} 
                     />
@@ -18,6 +21,7 @@ export default props => {
 
             {state.open_panel === 'camera' || !state.has_others_open ? 
                 <CameraConfigPanel 
+                    quiz_engine={quiz_engine}
                     onOpen={() => setState({...state, open_panel: 'camera', has_others_open: true})} 
                     onClose={() => setState({...state, open_panel: '', has_others_open: false})} 
                 />

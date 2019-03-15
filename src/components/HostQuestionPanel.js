@@ -9,6 +9,8 @@ const {QUIZ_ROLE_HOST} = Util;
 export default props => {
     const [state, setState] = useState({next_question_answers: []});
 
+    const {quiz_engine} = props;
+
     useEffect(() => {
         if (state.show_panel) {
             if (props.onOpen) props.onOpen();
@@ -33,47 +35,32 @@ export default props => {
     };
 
     const handleSendNextQuestion = async () => {
-        const {state, signal} = this;
         const {game_status} = state;
 
-        await this.handleReceiveQuestionFromHost(state.next_question, [...state.next_question_answers]);
-
-        game_status.questionId = shortid.generate();
-        game_status.question = state.next_question;
-        game_status.question_answers = [...state.next_question_answers];
-        delete game_status.answer;
-
-        _.times(3).map(i => {
-            let player_key = 'player' + (i+1);
-
-            delete game_status[`${player_key}_correct_answer`];
-            delete game_status[`${player_key}_answered`];
-            delete state[`${player_key}_answer`];
-        });
-
-        await this.setGameStatus();
-
-        this.setState({selected_answer: null});
+        await quiz_engine.sendQuestion(state.question, [...state.next_question_answers]);
     };
 
     const handleSendQuestionAnswer = async () => {
-        const {state} = this;
-
         if (!(state.selected_answer >= 0)) {
             return console.log('Please select answer');
         }
 
-        state.game_status.answer = state.selected_answer;
-
-        _.times(3).map(i => {
-            let player_key = 'player' + i;
-
-            state.game_status[`${player_key}_correct_answer`] = state[`${player_key}_answer`] >= 0 && state[`${player_key}_answer`] == state.selected_answer;
-        });
-
-        await this.setGameStatus();
+        await quiz_engine.sendAnswer(state.selected_answer);
     };
 
+    const clearOptions = () => {
+        const new_state = {...state};
+
+        ['selected_answer', 'question'].map(key => delete new_state[key]);
+
+        setState(new_state);
+    }
+
+    const handleSelectCorrectAnswer = (answer) => {
+        console.log('handleSelectCorrectAnswer:: answer', answer);
+
+        setState({...state, selected_answer: answer});
+    };
 
     return (
         <div className={"host-question-panel" + (state.show_panel ? " host-question-panel-expand scale-in-ver-top" : "")}>
@@ -112,6 +99,14 @@ export default props => {
                         <div className="field">
                             <div className="control">
                                 <button style={{width: '100%'}} onClick={handleSendNextQuestion} className={"button " + ((state.quizIsOn && state.quizRole == QUIZ_ROLE_HOST) && ' is-link' || '')}>Send Question</button>
+                            </div>
+                        </div>
+                        <div className="field">
+                            <label className="label">Correct Answer:</label>
+                            <div className="control" style={{display: 'flex'}}>
+                                {_.times(4).map(x => 
+                                    <div key={x} className={'host-answer-item' + (state.selected_answer >= 0 && state.selected_answer === x ? ' host-answer-item-selected' : '')} onClick={handleSelectCorrectAnswer.bind(null, x)}>{'ABCD'.charAt(x)}</div>
+                                )}
                             </div>
                         </div>
                         <div className="field">

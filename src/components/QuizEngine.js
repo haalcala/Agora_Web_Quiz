@@ -124,10 +124,21 @@ export default class QuizEngine {
         
     };
 
+
     /**
-     * Only applies to 'host' and 'audience'
+     * Only applies to 'host'
+     */
+    sendQuestion = async (question, answer_options) => {
+        console.log('[QuizEngine.js] sendQuestion:: question', question, 'answer_options', answer_options);
+
+    };
+
+    /**
+     * Only applies to 'host' and 'player'
      */
     sendAnswer = async (answer, playerId) => {
+        console.log('[QuizEngine.js] sendAnswer:: answer', answer, 'playerId', playerId);
+
         if (answer >= 0 && answer < 4) {
             if (this.game_role === "host") {
 
