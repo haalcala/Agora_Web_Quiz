@@ -19,6 +19,8 @@ const {
     GAME_STATUS_STARTED, 
     GAME_STATUS_ENDED} = Util;
 
+const SHARE_ID = 2;
+
 export default class QuizEngine {
     PLAYER_ID = shortid.generate();
 
@@ -51,8 +53,13 @@ export default class QuizEngine {
         console.log('[QuizEngine.js|constructor]('+game_role+'):: game_status', game_status);
 
         this.signal = new SignalingClient(APP_ID);
+        // this.rtcEngine = new AgoraRtcEngine();
+        this.rtcEngine = AgoraRTC.createClient({mode: 'live', codec: "h264"}); // eslint-disable-line 
 
         console.log('this.signal', this.signal);
+        console.log('this.rtcEngine', this.rtcEngine);
+
+        this.subscribeEvents();
     }
 
     /**
@@ -91,7 +98,7 @@ export default class QuizEngine {
 	};
 
 	subscribeEvents = () => {
-		const { signal } = this;
+		const { signal, PLAYER_ID } = this;
 
 		console.log('signal', signal);
 
