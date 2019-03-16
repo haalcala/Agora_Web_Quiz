@@ -53,8 +53,13 @@ export default class QuizEngine {
         console.log('[QuizEngine.js|constructor]('+game_role+'):: game_status', game_status);
 
         this.signal = new SignalingClient(APP_ID);
+        // this.rtcEngine = new AgoraRtcEngine();
+        this.rtcEngine = AgoraRTC.createClient({mode: 'live', codec: "h264"}); // eslint-disable-line 
 
         console.log('this.signal', this.signal);
+        console.log('this.rtcEngine', this.rtcEngine);
+
+        this.subscribeEvents();
     }
 
     /**
@@ -95,8 +100,7 @@ export default class QuizEngine {
 	};
 
 	subscribeEvents = () => {
-        const { signal, game_status } = this;
-        const { PLAYER_ID } = game_status;
+		const { signal, PLAYER_ID } = this;
 
 		console.log('signal', signal);
 
