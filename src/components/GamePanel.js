@@ -45,7 +45,7 @@ state:
 */
 
 export default function(props) {
-    const [state, setState] = useState({});
+    const [state, setState] = useState({_GAME_ID: 'GnyT5hI8fc'});
 
     const {quiz_engine} = props;
     const {game_role, PLAYER_ID, game_status} = quiz_engine;
@@ -54,23 +54,23 @@ export default function(props) {
 
     useEffect(() => {
         (async () => {
+            quiz_engine.onGameStatusUpdate = () => {
+                console.log(`[GamePanel.js]:: onGameStatusUpdate`);
+
+                setState({});
+            };
+
+            quiz_engine.onPlayerJoin = (playerId) => {
+                console.log(`[GamePanel.js]:: onPlayerJoin`, playerId);
+
+                setState({});
+            };
+    
             if (game_role === "host") {
                 console.log(`[GamePanel.js]:: Setting up onPlayerJoin`);
     
-                quiz_engine.onPlayerJoin = (playerId) => {
-                    console.log(`[GamePanel.js]:: onPlayerJoin`, playerId);
-    
-                    setState({});
-                };
-    
                 quiz_engine.onPlayerAnswer = (answer, playerId) => {
                     console.log(`[GamePanel.js]:: onPlayerAnswer`, answer, playerId);
-    
-                    setState({});
-                };
-    
-                quiz_engine.onGameStatusUpdate = () => {
-                    console.log(`[GamePanel.js]:: onGameStatusUpdate`);
     
                     setState({});
                 };
@@ -80,11 +80,37 @@ export default function(props) {
         })();
     }, [props.quiz_engine]);
 
+    const joinGame = async () => {
+        if (state._GAME_ID) {
+            state.GAME_ID = await quiz_engine.joinGame(state._GAME_ID);
+
+            console.log(`[GamePanel.js]:: joinGame: Successfully joined with GAME_ID`, state.GAME_ID);
+
+            await quiz_engine.requestAssignQuizRole();
+
+
+        }
+    };
+
     return (
         <div className='game-panel slide-in-top'>
-            <div style={{flexGrow : 1, display: 'flex', _border: '1px solid red', height: '100%'}}>
+            <div style={{flexGrow : 1, display: 'flex', border: '1px solid red', height: '100%'}}>
                 {/* <div style={{border: '1px solid green', flexGrow: 1, margin: 'auto'}}>1</div> */}
-                {/* <QuestionPanel game_role={game_role} game_status={game_status}/> */}
+                {state.GAME_ID ?
+                    <QuestionPanel game_role={game_role} game_status={game_status}/>
+                :
+                    <div className='slide-in-top' style={{margin: 'auto', _animationDelay: '1s'}}>
+                        <div>
+                            Enter Game ID:
+                        </div>
+                        <div>
+                            <input onChange={e => setState({...state, _GAME_ID: e.target.value})} value={state._GAME_ID}></input>
+                        </div>
+                        <div>
+                            <button onClick={joinGame}>Done</button>
+                        </div>
+                    </div>
+                }
             </div>
             <div className='players-panel'>
                 {/* <div>{_.upperFirst(game_role)} <div style={{display: 'block'}}/> PLAYER_ID {PLAYER_ID}</div> */}

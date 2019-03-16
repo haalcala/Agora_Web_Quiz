@@ -100,6 +100,47 @@ export default class QuizEngine {
 	};
 
 	subscribeEvents = () => {
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+        console.log('[QuizEngine.js] subscribeEvents:: ', );
+
 		const { signal, PLAYER_ID } = this;
 
 		console.log('signal', signal);
@@ -134,7 +175,7 @@ export default class QuizEngine {
 							
 							this.setGameStatus();
 
-                            this.setState({});
+                            // this.setState({});
                         }
 					});
 					
@@ -162,7 +203,7 @@ export default class QuizEngine {
                 if (msg.game_status) {
                     console.log('setting new game_status');
 
-                    this.setState({game_status: msg.game_status});
+                    // this.setState({game_status: msg.game_status});
                 }
             }
 		});
@@ -213,31 +254,26 @@ export default class QuizEngine {
                 return;
             }
 
+            const {video_stream_id, game_role, game_status} = this;
 
-			const { state } = this;
+            const {questionId} = game_status;
 
-            console.log('signal.channelEmitter.on(\'onChannelAttrUpdated\':: state', state);
+            console.log('signal.channelEmitter.on(\'onChannelAttrUpdated\':: this', this);
             
             if (key === 'game_status') {
                 const game_status = val = JSON.parse(val);
     
                 ['host', 'player1', 'player2', 'player3'].map(async game_role => {
                     if (game_status[game_role + '_player_id'] == PLAYER_ID) {
-                        state.game_role = game_role;
+                        this.game_role = game_role;
                     }
                 });
 
-                state.game_status = game_status;
+                this.game_status = game_status;
         
-                if (!state.video_stream_id && state.game_role) {
-                    this.handleJoin();
-                }
-
-                this.setupVideoPanels();
-
                 const new_state = {};
 
-                if (game_status.questionId != state.questionId) {
+                if (game_status.questionId != questionId) {
                     new_state.answer_from_host = ""; 
                     delete new_state.selected_answer;
                 }
@@ -248,19 +284,18 @@ export default class QuizEngine {
 
                 new_state.answer_from_host = game_status.answer;
 
-                this.setState(new_state);
+                // this.setState(new_state);
+
+                this.onGameStatusUpdate();
             }
-            else if (key === 'video_stream_id' && state.quizRole === QUIZ_ROLE_HOST) {
-                const { game_status } = state;
+            else if (key === 'video_stream_id' && game_role === QUIZ_ROLE_HOST) {
                 const [game_role, video_stream_id] = val.split(',');
 
                 game_status[`${game_role}_video_stream_id`] = parseInt(video_stream_id);
 
-                delete state[`${game_role}_video_stream_id`];
+                delete this[`${game_role}_video_stream_id`];
 
                 this.setGameStatus();
-
-                this.setupVideoPanels();
             }
 		});
 
@@ -292,16 +327,16 @@ export default class QuizEngine {
 				return
 			}
 
-			this.setState({
-				users: this.state.users.push(uid)
-			});
+			// this.setState({
+			// 	users: this.state.users.push(uid)
+			// });
 		});
 
 		this.rtcEngine.on('removestream', (uid, reason) => {
 			console.log('---===>>> this.rtcEngine.on(\'removestream\'):: uid, reason', uid, reason);
-			this.setState({
-				users: this.state.users.delete(this.state.users.indexOf(uid))
-			});
+			// // this.setState({
+			// 	users: this.state.users.delete(this.state.users.indexOf(uid))
+			// });
 		});
 
 		this.rtcEngine.on('leavechannel', () => {
@@ -315,24 +350,24 @@ export default class QuizEngine {
 
 			console.log('---===>>> new_state', new_state);
 
-			this.setState(new_state);
+			// this.setState(new_state);
 		});
 
 		this.rtcEngine.on('audiodevicestatechanged', () => {
 			console.log('---===>>> this.rtcEngine.on(\'audiodevicestatechanged\')::');
 
-			this.setState({
-				audioDevices: this.rtcEngine.getAudioRecordingDevices(),
-				audioPlaybackDevices: this.rtcEngine.getAudioPlaybackDevices()
-			});
+			// this.setState({
+			// 	audioDevices: this.rtcEngine.getAudioRecordingDevices(),
+			// 	audioPlaybackDevices: this.rtcEngine.getAudioPlaybackDevices()
+			// });
 		});
 
 		this.rtcEngine.on('videodevicestatechanged', () => {
 			console.log("this.rtcEngine.on('videodevicestatechanged')::");
 
-			this.setState({
-				videoDevices: this.rtcEngine.getVideoDevices()
-			});
+			// this.setState({
+			// 	videoDevices: this.rtcEngine.getVideoDevices()
+			// });
 		});
 
 		this.rtcEngine.on('audiovolumeindication', (
@@ -428,14 +463,75 @@ export default class QuizEngine {
     joinGame = async (game_id) => {
         console.log('[QuizEngine.js] joinGame:: game_id', game_id);
 
-        const {game_role, game_status} = this;
+        const {game_role, game_status, signal, PLAYER_ID} = this;
         
         if ([QUIZ_ROLE_PLAYER, QUIZ_ROLE_AUDIENCE].indexOf(game_role) > -1) {
             if (!game_id) {
                 throw new Error('Missing required parameter \'game_id\'');
             }
 
-            this.GAME_ID = game_id;
+            const login_result = await signal.login(this.PLAYER_ID);
+
+            console.log('login_result', login_result);
+
+            const channel = this.channel = await signal.join(game_id);
+
+            await signal.sendMessage(game_status.host_player_id, "assign_player");
+
+            let start = new Date();
+
+            let game_role, reason;
+
+            let timer_id = setInterval(async () => {
+                const {game_status} = this;
+
+                if (game_status) {
+                    let player_count = 0;
+
+                    _.times(4).map(i => {
+                        if (game_status[`player${i+1}_player_id`] === PLAYER_ID) {
+                            game_role = `player${i+1}`
+                        }
+
+                        if (game_status[`player${i+1}_player_id`]) {
+                            player_count++;
+                        }
+                    });
+
+                    if (game_status && game_status.state === GAME_STATUS_STARTED) {
+                        reason = "Game already started";
+                    }
+                    else if (game_status && game_status.state === GAME_STATUS_ENDED) {
+                        reason = "Game already ended";
+                    }
+                    else if (player_count === 3) {
+                        reason = "Game is full";
+                    }
+                }
+                
+                if (reason || game_role || (new Date() - start) >= 10000) {
+                    console.log('joinGame:: game_status', game_status);
+
+                    if (game_role) {
+                        console.log('Successfully joined game as', game_role);
+
+                        // this.setState({ quizIsOn: true, quizRole: QUIZ_ROLE_PLAYER, game_id, current_state: `Joined and awaiting quiz start from host.` });
+
+                        // this.handleJoin();
+
+                        this.onPlayerJoin();
+                    }
+                    else {
+                        console.log('ERROR: Unable to join game' + (reason ? ` (Reason: ${reason})` : ""));
+
+                        // this.setState({current_state: 'ERROR: Unable to join game' + (reason ? ` (Reason: ${reason})` : "")});
+                    }
+
+                    clearInterval(timer_id);
+                }
+            }, 100);
+
+            return game_id;
         } 
         else {
             throw new Error(`Invalid game role \'${game_role}\'`);
@@ -489,6 +585,17 @@ export default class QuizEngine {
 
     /**
      * Only applies to 'player'
+     */
+    requestAssignQuizRole = async () => {
+        const {game_status} = this;
+
+        console.log('[QuizEngine.js] requestAssignQuizRole:: ', );
+        
+
+    };
+
+    /**
+     * Only applies to 'host'
      */
     assignQuizRole = async (new_player_id) => {
         const {game_status} = this;
