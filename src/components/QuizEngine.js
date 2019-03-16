@@ -88,13 +88,15 @@ export default class QuizEngine {
      * Only applies to 'host'
      */
 	setGameStatus = async () => {
+        console.log('[QuizEngine.js] setGameStatus::',);
+
 		const { game_status, signal } = this;
         
         game_status.requestId = shortid.generate();
 
 		let result = await this.setChannelAttribute('game_status', JSON.stringify(game_status));
 
-		console.log('setGameStatus:: 2222 result', result);
+		console.log('[QuizEngine.js] setGameStatus:: 2222 result', result);
 	};
 
 	subscribeEvents = () => {
@@ -457,6 +459,8 @@ export default class QuizEngine {
         this.game_status.question = question;
         this.game_status.question_answers = answer_options;
 
+        await this.setGameStatus();
+
         this.onGameStatusUpdate();
     };
 
@@ -473,6 +477,8 @@ export default class QuizEngine {
             else if (this.game_role.indexOf("player") === 0) {
 
             }
+
+            await this.setGameStatus();
 
             this.onGameStatusUpdate();
         }
