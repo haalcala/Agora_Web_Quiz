@@ -13,7 +13,7 @@ export default props => {
     }, [state.show_panel]);
 
     return (
-        <div className='video-config-panel'>
+        <div className='settings-item-panel'>
             <img src={require('./list-512.png')} style={{width: '64px', height: '64px'}}/>
         </div>
     );

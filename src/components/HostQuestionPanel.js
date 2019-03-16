@@ -69,7 +69,7 @@ export default props => {
     }
 
     return (
-        <div className={'host-question-panel' + (state.first_time_load ? ' host-question-panel-first-time' : '') + (state.show_panel ? " host-question-panel-expand scale-in-ver-top" : "")}>
+        <div className={'settings-item-panel' + (state.first_time_load ? ' host-question-panel-first-time' : '') + (state.show_panel ? " host-question-panel-expand scale-in-ver-top" : "")}>
             {!state.show_panel ?
                 <div onClick={() => setState({...state, show_panel: true})}
                     style={{}}>

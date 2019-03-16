@@ -84,7 +84,7 @@ export default function(props) {
         <div className='game-panel slide-in-top'>
             <div style={{flexGrow : 1, display: 'flex', _border: '1px solid red', height: '100%'}}>
                 {/* <div style={{border: '1px solid green', flexGrow: 1, margin: 'auto'}}>1</div> */}
-                <QuestionPanel game_role={game_role} game_status={game_status}/>
+                {/* <QuestionPanel game_role={game_role} game_status={game_status}/> */}
             </div>
             <div className='players-panel'>
                 {/* <div>{_.upperFirst(game_role)} <div style={{display: 'block'}}/> PLAYER_ID {PLAYER_ID}</div> */}

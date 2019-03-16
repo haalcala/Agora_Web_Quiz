@@ -6,8 +6,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-image: linear-gradient(270deg,#cc6aa5,#3e91cc,#2dcca7);
-  background-size: 600% 100%;
+  /* background-image: linear-gradient(270deg,#cc6aa5,#3e91cc,#2dcca7);
+  background-size: 600% 100%; */
 }
 
 html, body {
@@ -213,6 +213,31 @@ code {
     color: white;
 }
 
+.settings-panel {
+  position: absolute;
+  /* border: 10px solid green; */
+  top: 10px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  column-gap: 1em;
+}
+
+
+.settings-item-panel {
+  border: 3px solid green;
+  width: 70px;
+  background: white;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-bottom: 1em;
+}
+
+.settings-item-panel:hover {
+  background: lightgreen;
+  border-color: black;
+}
+
 .game-panel {
     /* border: 1px solid blue; */
     height: 100%;
@@ -234,29 +259,21 @@ code {
     margin-bottom: 1em;
 }
 
-.host-question-panel {
-    border: 3px solid green;
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    width: 70px;
-    background: white;
-    border-radius: 10px;
-    cursor: pointer;
-}
-
 .host-question-panel-expand {
     padding: 1em;
     width: 300px;
     box-shadow: 3px 3px gray;
     cursor: unset;
+    background: white;
+}
+
+.host-question-panel-expand:hover {
+  background: white;
+  border-color: green;
 }
 
 .video-config-panel {
     border: 3px solid green;
-    position: absolute;
-    top: 90px;
-    left: 10px;
     width: 70px;
     background: white;
     border-radius: 10px;

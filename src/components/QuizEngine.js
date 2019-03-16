@@ -47,7 +47,7 @@ export default class QuizEngine {
         else if ([QUIZ_ROLE_PLAYER, QUIZ_ROLE_AUDIENCE].indexOf(game_role) > -1) {
         } 
         else {
-            throw new Error(`Invalid game role \'${game_role}\'`);
+            throw new Error(`Invalid game role '${game_role}'`);
         }
 
         console.log('[QuizEngine.js|constructor]('+game_role+'):: game_status', game_status);

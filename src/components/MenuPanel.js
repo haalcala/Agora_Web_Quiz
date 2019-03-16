@@ -9,8 +9,8 @@ export default props => {
     const {quiz_engine} = props;
 
     return (
-        <div style={{_border: '1px solid blue'}}>
-            {state.open_panel === 'question' || !state.has_others_open ? 
+        <div className='settings-panel'>
+            {quiz_engine.game_role === 'host' && (state.open_panel === 'question' || !state.has_others_open) ? 
                 <HostQuestionPanel 
                     quiz_engine={quiz_engine}
                     onOpen={() => setState({...state, open_panel: 'question', has_others_open: true})} 
