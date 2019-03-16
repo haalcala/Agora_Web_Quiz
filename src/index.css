@@ -112,7 +112,6 @@ code {
 .answer-item {
     display: block;
     white-space: nowrap;
-    width: 100%;
     /* width: fit-content; */
     border-radius: 1em;
     background: none;
@@ -121,6 +120,7 @@ code {
     margin-left: 2em;
     margin-top: .1em;
     width: 80%;
+    padding-left: 2em;
 }
 
 .answer-item-selectable {
@@ -134,8 +134,11 @@ code {
 }
 
 .selected {
-    border: 1px solid red;
-    border-radius: .2em
+    border: 3px solid green;
+    border-radius: 2em;
+    background: green;
+    color: white;
+    padding-left: .5em;
 }
 
 .selected:focus {
