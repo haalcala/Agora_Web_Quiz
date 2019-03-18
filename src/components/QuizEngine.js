@@ -134,45 +134,6 @@ export default class QuizEngine {
 
 	subscribeEvents = () => {
         console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
-        console.log('[QuizEngine.js] subscribeEvents:: ', );
 
 		const { signal, PLAYER_ID } = this;
 
