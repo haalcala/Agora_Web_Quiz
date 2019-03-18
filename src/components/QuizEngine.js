@@ -465,6 +465,8 @@ export default class QuizEngine {
 
             const channel = this.channel = await signal.join(game_id);
 
+            this.GAME_ID = game_id;
+
             let start = new Date();
             
             let game_role, reason;
