@@ -45,7 +45,7 @@ state:
 */
 
 export default function(props) {
-    const [state, setState] = useState({_GAME_ID: 'GnyT5hI8fc'});
+    const [state, setState] = useState({_GAME_ID: 'ZmvvCkKdNf'});
 
     const {quiz_engine} = props;
     const {game_role, PLAYER_ID, game_status} = quiz_engine;
