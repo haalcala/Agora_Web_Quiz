@@ -597,6 +597,10 @@ export default class QuizEngine {
         if (answer >= 0 && answer < 4) {
             if (game_role === "host") {
                 game_status.answer = answer;
+
+                _.times(4, x => `player${x+1}`).map(player_key => {
+                    game_status[`${player_key}_answer_correct`] = this[`${player_key}_answer`] === answer;
+                });
                 
                 await this.setGameStatus();
 
