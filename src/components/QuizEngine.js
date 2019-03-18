@@ -580,10 +580,10 @@ export default class QuizEngine {
     /**
      * Only applies to 'player'
      */
-    requestAssigngame_role = async () => {
+    requestAssignQuizRole = async () => {
         const {game_status, signal} = this;
 
-        console.log('[QuizEngine.js] requestAssigngame_role:: ', );
+        console.log('[QuizEngine.js] requestAssignQuizRole:: ', );
         
         await signal.sendMessage(game_status.host_player_id, "assign_player");
     };
