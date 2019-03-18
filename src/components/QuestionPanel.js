@@ -18,7 +18,7 @@ export default props => {
             return;
         }
 
-        if (props.answer) {
+        if (game_status.answer >= 0) {
             return;
         }
 
@@ -120,7 +120,7 @@ function AnswerItem(props) {
     }
 
     return (
-        <div className={classes.concat([selected_answer == i ? " selected": ""]).join(' ')} 
+        <div className={classes.concat([selected_answer == i ? " selected": "", answer >= 0 ? 'answer-item-selectable-no-select' : '']).join(' ')} 
             onClick={props.selectAnswer} 
             >
             <div style={{display: "inline", width: "1em"}}>

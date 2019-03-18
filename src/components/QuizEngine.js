@@ -253,13 +253,12 @@ export default class QuizEngine {
 			const { game_status } = this;
 
 			if (this.game_role === QUIZ_ROLE_HOST) {
-				_.times(3).map(n => {
-					const player_key = `player${n}_player_id`;
-					if (game_status[player_key] === account) {
+				_.times(3, x => `player${x+1}`).map(player_key => {                    
+					if (game_status[`${player_key}_player_id`] === account) {
                         console.log('removing player with account id', account);
 
 						delete game_status[player_key];
-						delete game_status[`player${n}_video_stream_id`];
+						delete game_status[`${player_key}_video_stream_id`];
 					}
 				});
 

@@ -133,6 +133,15 @@ code {
     color: darkgreen;
 }
 
+.answer-item-selectable-no-select {
+    cursor: unset;
+}
+
+.answer-item-selectable-no-select:hover {
+    background: unset;
+    color: unset;
+}
+
 .selected {
     border: 3px solid darkgreen;
     border-radius: 2em;
@@ -183,14 +192,13 @@ code {
     left: .2em;
     text-align: right;
     font-size: 2em;
-    /* border: 1px solid yellow; */
     background: gold;
     width: fit-content;
     line-height: normal;
     border-radius: 3px;
     width: 1em;
     text-align: center;
-    /* display: none; */
+    font-weight: bold;
 }
 
 .player_new_answer {
