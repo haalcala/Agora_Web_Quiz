@@ -476,16 +476,14 @@ export default class QuizEngine {
 
             const channel = this.channel = await signal.join(game_id);
 
-            await signal.sendMessage(game_status.host_player_id, "assign_player");
-
             let start = new Date();
-
+            
             let game_role, reason;
-
+            
             let timer_id = setInterval(async () => {
                 const {game_status} = this;
-
-                if (game_status) {
+                
+                if (game_status) {                    
                     let player_count = 0;
 
                     _.times(4).map(i => {
@@ -587,11 +585,11 @@ export default class QuizEngine {
      * Only applies to 'player'
      */
     requestAssignQuizRole = async () => {
-        const {game_status} = this;
+        const {game_status, signal} = this;
 
         console.log('[QuizEngine.js] requestAssignQuizRole:: ', );
         
-
+        await signal.sendMessage(game_status.host_player_id, "assign_player");
     };
 
     /**

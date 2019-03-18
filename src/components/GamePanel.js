@@ -86,9 +86,7 @@ export default function(props) {
 
             console.log(`[GamePanel.js]:: joinGame: Successfully joined with GAME_ID`, state.GAME_ID);
 
-            await quiz_engine.requestAssignQuizRole();
-
-
+            return await quiz_engine.requestAssignQuizRole();
         }
     };
 
@@ -104,7 +102,7 @@ export default function(props) {
                             Enter Game ID:
                         </div>
                         <div>
-                            <input onChange={e => setState({...state, _GAME_ID: e.target.value})} value={state._GAME_ID}></input>
+                            <input type='text' onChange={e => setState({...state, _GAME_ID: e.target.value})} value={state._GAME_ID}></input>
                         </div>
                         <div>
                             <button onClick={joinGame}>Done</button>
