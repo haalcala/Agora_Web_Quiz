@@ -26,6 +26,10 @@ export default props => {
                     onClose={() => setState({...state, open_panel: '', has_others_open: false})} 
                 />
             : null}
+
+            <div className='settings-item-panel'>
+                <img style={{width: '48px', height: '48px', margin: 'auto'}} src={require("./logout.png")} alt='Logout'/>
+            </div>
         </div>
     );
 };

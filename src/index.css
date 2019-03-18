@@ -230,7 +230,9 @@ code {
   background: white;
   border-radius: 10px;
   cursor: pointer;
+  height: 70px;
   margin-bottom: 1em;
+  display: flex;
 }
 
 .settings-item-panel:hover {
