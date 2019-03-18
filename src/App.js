@@ -30,7 +30,7 @@ console.log('App.js:: GAME_STATUS_WAIT_FOR_PLAYERS', GAME_STATUS_WAIT_FOR_PLAYER
 
 export default (props) => {
 	const [state, setState] = useState({
-		showModal: false,
+		show_menu: true,
 		// quiz_engine : new QuizEngine('host')
 	});
 
@@ -45,14 +45,19 @@ export default (props) => {
 
 				setState({...state, quiz_engine});
 			}, 2000);
-		}
+        }
+        
 	}, [state.game_role]);
 
 	// setTimeout(() => {
 	// 	const quiz_engine = new QuizEngine('host');
 
 	// 	setState({...state, quiz_engine});
-	// }, 1000);
+    // }, 1000);
+    
+    const onExit = async () => {
+        setState({...state, quiz_engine: null, show_menu: true, game_role: null});
+    };
 
 	return (
 		<div className="App">
@@ -75,18 +80,18 @@ export default (props) => {
 
 			<Container style={{height: '100%'}}>	
 				{quiz_engine ? 
-					<GamePanel quiz_engine={quiz_engine}/>
+					<GamePanel quiz_engine={quiz_engine} />
 					: 
-					<div className={game_role ? 'bounce-out-top' : 'slide-in-elliptic-top-fwd'} style={{height: '40em', _border: '1px solid red', display:'flex', flexDirection:'column', justifyContent:'space-around'}}>
-						<div className="main-menu-item" onClick={() => setState({...state, game_role: 'host'})}>Host</div>
-						<div className="main-menu-item" onClick={() => setState({...state, game_role: 'player'})}>Participate</div>
-						<div className="main-menu-item" onClick={() => setState({...state, game_role: 'audience'})}>Watch</div>
+					<div className={state.show_menu ? 'slide-in-elliptic-top-fwd' : 'bounce-out-top'} style={{height: '40em', _border: '1px solid red', display:'flex', flexDirection:'column', justifyContent:'space-around'}}>
+						<div className="main-menu-item" onClick={() => setState({...state, show_menu: false, game_role: 'host'})}>Host</div>
+						<div className="main-menu-item" onClick={() => setState({...state, show_menu: false, game_role: 'player'})}>Participate</div>
+						<div className="main-menu-item" onClick={() => setState({...state, show_menu: false, game_role: 'audience'})}>Watch</div>
 					</div>
 				}
 			</Container>
 
 			{quiz_engine ? 
-				<MenuPanel quiz_engine={quiz_engine} />
+				<MenuPanel quiz_engine={quiz_engine} onExit={onExit} />
 				: null}
 		</div>
 	);

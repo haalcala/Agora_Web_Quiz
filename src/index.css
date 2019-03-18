@@ -240,6 +240,11 @@ code {
   border-color: black;
 }
 
+.modal-content {
+    @extend: .modal-content;
+    margin: auto;
+}
+
 .game-panel {
     /* border: 1px solid blue; */
     height: 100%;
