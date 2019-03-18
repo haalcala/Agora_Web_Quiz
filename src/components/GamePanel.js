@@ -20,13 +20,13 @@ export default function(props) {
             quiz_engine.onGameStatusUpdate = () => {
                 console.log(`[GamePanel.js]:: onGameStatusUpdate`);
 
-                setState({});
+                setState({...state});
             };
 
             quiz_engine.onPlayerJoin = (playerId) => {
                 console.log(`[GamePanel.js]:: onPlayerJoin`, playerId);
 
-                setState({});
+                setState({...state});
             };
     
             if (game_role === "host") {
@@ -35,7 +35,7 @@ export default function(props) {
                 quiz_engine.onPlayerAnswer = (answer, playerId) => {
                     console.log(`[GamePanel.js]:: onPlayerAnswer`, answer, playerId);
     
-                    setState({});
+                    setState({...state});
                 };
     
                 await quiz_engine.createGame();
@@ -49,9 +49,15 @@ export default function(props) {
 
             console.log(`[GamePanel.js]:: joinGame: Successfully joined with GAME_ID`, state.GAME_ID);
 
-            return await quiz_engine.requestAssignQuizRole();
+            if (quiz_engine.game_role === 'player') {
+                await quiz_engine.requestAssignQuizRole();
+            }
+
+            setState({...state});
         }
     };
+
+    console.log('[GamePanel.js]:: state', state);
 
     return (
         <div className='game-panel slide-in-top'>

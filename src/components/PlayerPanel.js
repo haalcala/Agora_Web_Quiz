@@ -11,9 +11,9 @@ export default function PlayerPanel(props) {
     const [state, setState] = useState({joined: false});
     const [state2, setState2] = useState({count: 0});
     
-    console.log(`[${quiz_role}]:: `, 'PlayerPanel:: props', props, 'state', state);
+    // console.log(`[${quiz_role}]:: `, 'PlayerPanel:: props', props, 'state', state);
 
-    console.log(`[${quiz_role}]:: `, 'state.joined', state.joined);
+    // console.log(`[${quiz_role}]:: `, 'state.joined', state.joined);
 
     let just_joined = false;
 
@@ -33,22 +33,22 @@ export default function PlayerPanel(props) {
         just_answered = !state.just_answered;
     }
 
-    console.log(`[${quiz_role}]:: `, 'just_joined', just_joined, 'just_answered', just_answered);
+    // console.log(`[${quiz_role}]:: `, 'just_joined', just_joined, 'just_answered', just_answered);
 
     // console.log(`[${quiz_role}]:: `, 'state, setState', state, setState);
     // console.log(`[${quiz_role}]:: `, 'state2, setState2', state2, setState2);
 
     useEffect(() => {
-        console.log(`[${quiz_role}]:: `, 'useEffect:: 111 props', props, 'just_joined', just_joined);
+        // console.log(`[${quiz_role}]:: `, 'useEffect:: 111 props', props, 'just_joined', just_joined);
         
         setTimeout(() => {
-            console.log(`[${quiz_role}]:: `, 'useEffect:: 222 props', props, 'just_joined', just_joined);
+            // console.log(`[${quiz_role}]:: `, 'useEffect:: 222 props', props, 'just_joined', just_joined);
             setState({...state})
         }, 600);
     }, [playerId, my_answer]);
 
-    console.log(`[${quiz_role}]:: `, 'player label classes', ['player-label', just_joined ? 'player_joined' : ''].join(' '));
-    console.log(`[${quiz_role}]:: `, 'player_answer_tab classes', ['player_answer_tab', answered ? 'player_new_answer' : '', just_answered ? 'rotate-scale-up' : ' '].join(' '));
+    // console.log(`[${quiz_role}]:: `, 'player label classes', ['player-label', just_joined ? 'player_joined' : ''].join(' '));
+    // console.log(`[${quiz_role}]:: `, 'player_answer_tab classes', ['player_answer_tab', answered ? 'player_new_answer' : '', just_answered ? 'rotate-scale-up' : ' '].join(' '));
 
     return (
         <div className={["player-icon", playerId ? 'shadow-drop-center' : ''].join(' ')} style={{_border: "1px dashed green"}}>
