@@ -166,7 +166,7 @@ export default class QuizEngine {
                 if (command === 'answer') {
                     _.times(4).map(i => {
                         if (game_status[`player${i+1}_player_id`] === account) {
-                            state[`player${i+1}_answer`] = val;
+                            this[`player${i+1}_answer`] = val;
 
                             game_status[`player${i+1}_answered`] = true;
     
@@ -217,10 +217,9 @@ export default class QuizEngine {
 		signal.channelEmitter.on('onChannelUserLeaved', (account, uid) => {
 			console.log('---===>>> signal.channelEmitter.on(\'onChannelUserLeaved\':: account, uid', account, uid);
 
-			const { state } = this;
-			const { game_status } = state;
+			const { game_status } = this;
 
-			if (state.game_role === QUIZ_ROLE_HOST) {
+			if (this.game_role === QUIZ_ROLE_HOST) {
 				_.times(3).map(n => {
 					const player_key = `player${n}_player_id`;
 					if (game_status[player_key] === account) {
@@ -238,12 +237,11 @@ export default class QuizEngine {
 		signal.channelEmitter.on('onChannelUserJoined', async (account, uid) => {
 			console.log('---===>>> signal.channelEmitter.on(\'onChannelUserJoined\':: account, uid', account, uid);
 
-			const { state, signal } = this;
-			const { game_status } = state;
+			const { game_status, signal } = this;
 
 			// console.log('game_status.state', game_status.state);
 
-            state.quizIsOn && state.game_role === QUIZ_ROLE_HOST && await signal.sendMessage(account, JSON.stringify({game_status}));
+            this.game_role === QUIZ_ROLE_HOST && await signal.sendMessage(account, JSON.stringify({game_status}));
 		});
 
 		signal.channelEmitter.on('onChannelAttrUpdated', async (key, val, op, ...args) => {
@@ -299,22 +297,21 @@ export default class QuizEngine {
 		});
 
 		this.rtcEngine.on('joinedchannel', (channel, uid, elapsed) => {
-			const { state } = this;
-			const { game_status } = state;
-
+            const { game_status } = this;
+            
 			console.log('---===>>> this.rtcEngine.on(\'joinedchannel\'):: channel, uid, elapsed', channel, uid, elapsed);
 
-			state.video_stream_id = uid;
+			this.video_stream_id = uid;
 
-			if (state.game_role === QUIZ_ROLE_HOST) {
+			if (this.game_role === QUIZ_ROLE_HOST) {
 				game_status.host_video_stream_id = uid;
 
 				this.setupVideoPanels();
             }
-            else if (state.game_role === QUIZ_ROLE_PLAYER && state.game_role) {
-                if (!game_status[state.game_role + '_video_stream_id'] && state.video_stream_id) {
+            else if (this.game_role === QUIZ_ROLE_PLAYER && this.game_role) {
+                if (!game_status[this.game_role + '_video_stream_id'] && this.video_stream_id) {
                     process.nextTick(() => {
-                        this.setChannelAttribute('video_stream_id', [state.game_role, state.video_stream_id].join(','));
+                        this.setChannelAttribute('video_stream_id', [this.game_role, this.video_stream_id].join(','));
                     });
                 }
             }
@@ -322,19 +319,19 @@ export default class QuizEngine {
 
 		this.rtcEngine.on('userjoined', (uid, elapsed) => {
 			console.log('---===>>> this.rtcEngine.on(\'userjoined\'):: uid, elapsed', uid, elapsed);
-			if (uid === SHARE_ID && this.state.localVideoSource) {
+			if (uid === SHARE_ID && this.localVideoSource) {
 				return
 			}
 
 			// this.setState({
-			// 	users: this.state.users.push(uid)
+			// 	users: this.users.push(uid)
 			// });
 		});
 
 		this.rtcEngine.on('removestream', (uid, reason) => {
 			console.log('---===>>> this.rtcEngine.on(\'removestream\'):: uid, reason', uid, reason);
 			// // this.setState({
-			// 	users: this.state.users.delete(this.state.users.indexOf(uid))
+			// 	users: this.users.delete(this.users.indexOf(uid))
 			// });
 		});
 
@@ -343,7 +340,7 @@ export default class QuizEngine {
 
 			const new_state = {
 				local: '', localVideoSource: '',
-				users: this.state.users.splice(0),
+				users: this.users.splice(0),
 				videos_on: []
 			};
 
