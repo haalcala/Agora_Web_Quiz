@@ -11,8 +11,10 @@ export default props => {
 		options : [],
     });
     
-	const selectAnswer = async (answer) => {
-        if (game_role !== 'player') {
+	const handleSelectAnswer = async (answer) => {
+        console.log('QuestionPanel.handleSelectAnswer:: answer', answer);
+
+        if (game_role.indexOf('player') !== 0) {
             return;
         }
 
@@ -21,11 +23,14 @@ export default props => {
         }
 
         console.log(answer);
+
+        setState({...state, selected_answer: answer});
         
-        props.onSelectAnswer(answer)
+        props.onSelectAnswer(answer);
 	}
 
     console.log('QuestionPanel.render:: game_status', game_status);
+    console.log('QuestionPanel.render:: state', state);
 
     const { answer, question, question_answers } = game_status;
 
@@ -92,7 +97,7 @@ export default props => {
                             answer={answer} 
                             i={i} 
                             option={question_answers && question_answers[i]} 
-                            selectAnswer={selectAnswer.bind(null, i)} />
+                            selectAnswer={handleSelectAnswer.bind(null, i)} />
                         )
                 })}
                 </div>
@@ -102,18 +107,22 @@ export default props => {
 }
 
 function AnswerItem(props) {
-    const {isSelectable, selected_answer, answer, i, option, selectAnswer} = props;
+    const {isSelectable, selected_answer, answer, i, option} = props;
+
+    console.log('AnswerItem:: props', props)
 
     // console.log("selected_answer", selected_answer, "answer", answer, "i", i, "option", option, "selectAnswer", selectAnswer);
 
     const classes = ['answer-item'];
 
     if (isSelectable) {
-        classes.push('is-link')
+        classes.push('answer-item-selectable')
     }
 
     return (
-        <div className={classes.concat([selected_answer == i ? " selected": ""]).join(' ')} onClick={() => selectAnswer(i)} >
+        <div className={classes.concat([selected_answer == i ? " selected": ""]).join(' ')} 
+            onClick={props.selectAnswer} 
+            >
             <div style={{display: "inline", width: "1em"}}>
                 {answer >= 0 ? (selected_answer == i ? (answer == selected_answer ? "✔︎" : "✘") : " ") : " "} 
             </div>

@@ -129,16 +129,16 @@ code {
 }
 
 .answer-item-selectable:hover {
-    background: green;
-    color: white;
+    background: lightgreen;
+    color: darkgreen;
 }
 
 .selected {
-    border: 3px solid green;
+    border: 3px solid darkgreen;
     border-radius: 2em;
     background: green;
     color: white;
-    padding-left: .5em;
+    /* padding-left: .5em; */
 }
 
 .selected:focus {

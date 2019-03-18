@@ -11,7 +11,7 @@ export default function PlayerPanel(props) {
     const [state, setState] = useState({joined: false});
     const [state2, setState2] = useState({count: 0});
     
-    // console.log(`[${quiz_role}]:: `, 'PlayerPanel:: props', props, 'state', state);
+    console.log(`[${quiz_role}]:: `, 'PlayerPanel:: props', props, 'state', state);
 
     // console.log(`[${quiz_role}]:: `, 'state.joined', state.joined);
 
@@ -49,6 +49,13 @@ export default function PlayerPanel(props) {
 
     // console.log(`[${quiz_role}]:: `, 'player label classes', ['player-label', just_joined ? 'player_joined' : ''].join(' '));
     // console.log(`[${quiz_role}]:: `, 'player_answer_tab classes', ['player_answer_tab', answered ? 'player_new_answer' : '', just_answered ? 'rotate-scale-up' : ' '].join(' '));
+    
+    
+    console.log(`[${quiz_role}]:: `, 'quiz_role.indexOf(\'host\')', quiz_role.indexOf('host'));
+    console.log(`[${quiz_role}]:: `, 'quiz_role.indexOf(\'player\')', quiz_role.indexOf('player'));
+    console.log(`[${quiz_role}]:: `, 'quiz_role === quiz_engine.game_role', quiz_role === quiz_engine.game_role);
+    console.log(`[${quiz_role}]:: `, 'answered', answered);
+    console.log(`[${quiz_role}]:: `, 'quiz_role', quiz_role);
 
     return (
         <div className={["player-icon", playerId ? 'shadow-drop-center' : ''].join(' ')} style={{_border: "1px dashed green"}}>
@@ -60,7 +67,11 @@ export default function PlayerPanel(props) {
                 {playerId && `${_.upperFirst(quiz_role)} ${playerId == quiz_engine.PLAYER_ID && '(ME)' || ''}` || "..."}
             </div>
             <div className={['player_answer_tab', answered ? 'player_new_answer' : '', just_answered ? 'rotate-scale-up' : ' '].join(' ')} style={{}}>
-                {(answered && 'ABCD'.charAt(my_answer)) || null}
+                {answered && (
+                    (quiz_role.indexOf('host') === 0 
+                        || (quiz_role.indexOf('player') === 0 && quiz_role === quiz_engine.game_role)
+                    ) ? 'ABCD'.charAt(my_answer) : '!')
+                || null}
             </div>
         </div>
     );

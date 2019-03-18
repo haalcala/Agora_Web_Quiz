@@ -591,19 +591,23 @@ export default class QuizEngine {
      * Only applies to 'host' and 'player'
      */
     sendAnswer = async (answer, playerId) => {
+        const {signal, game_status, game_role} = this;
+
         console.log('[QuizEngine.js] sendAnswer:: answer', answer, 'playerId', playerId);
 
         if (answer >= 0 && answer < 4) {
-            if (this.game_role === "host") {
-                this.game_status.answer = answer;
+            if (game_role === "host") {
+                game_status.answer = answer;
+                
+                await this.setGameStatus();
+
+                this.onGameStatusUpdate();
             }
-            else if (this.game_role.indexOf("player") === 0) {
+            else if (game_role.indexOf("player") === 0) {
+                this[this.game_role + "_answer"] = answer;
 
+                await signal.sendMessage(game_status.host_player_id, "answer,"+answer);
             }
-
-            await this.setGameStatus();
-
-            this.onGameStatusUpdate();
         }
         else {
             throw new Error("Answer can only be between 0 and 3, inclusive");
@@ -624,10 +628,10 @@ export default class QuizEngine {
     /**
      * Only applies to 'host'
      */
-    assigngame_role = async (new_player_id) => {
+    assignQuizRole = async (new_player_id) => {
         const {game_status} = this;
 
-        console.log('[QuizEngine.js] assigngame_role:: new_player_id', new_player_id);
+        console.log('[QuizEngine.js] assignQuizRole:: new_player_id', new_player_id);
         
         let player_role;
         
@@ -638,7 +642,7 @@ export default class QuizEngine {
             }
         });
 
-        console.log('assigngame_role:: player_role', player_role, 'game_status', game_status);
+        console.log('assignQuizRole:: player_role', player_role, 'game_status', game_status);
 
         setImmediate(() => {
             if (this.onPlayerJoin) {

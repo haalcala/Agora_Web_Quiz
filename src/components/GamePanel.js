@@ -57,6 +57,12 @@ export default function(props) {
         }
     };
 
+    const onSelectAnswer = async answer => {
+        console.log('[GamePanel.js]:: onSelectAnswer: answer', answer);
+
+        await quiz_engine.sendAnswer(answer);
+    };
+
     console.log('[GamePanel.js]:: state', state);
 
     return (
@@ -64,7 +70,7 @@ export default function(props) {
             <div style={{flexGrow : 1, display: 'flex', border: '1px solid red', height: '100%'}}>
                 {/* <div style={{border: '1px solid green', flexGrow: 1, margin: 'auto'}}>1</div> */}
                 {state.GAME_ID ?
-                    <QuestionPanel game_role={game_role} game_status={game_status}/>
+                    <QuestionPanel game_role={game_role} game_status={game_status} onSelectAnswer={onSelectAnswer}/>
                 :
                     <div className='slide-in-top' style={{margin: 'auto', _animationDelay: '1s'}}>
                         <div>
@@ -84,7 +90,7 @@ export default function(props) {
                 {['host', 'player1', 'player2', 'player3'].map(quiz_role =>
                     <div key={quiz_role} style={{margin: "auto", _border: '1px dashed green', marginTop: '0px'}}>
                         <PlayerPanel 
-                            my_answer={quiz_engine[`${quiz_role}_answer`]}
+                            my_answer={quiz_role === game_role && quiz_engine[`${quiz_role}_answer`]}
                             quiz_engine={quiz_engine} 
                             quiz_role={quiz_role} 
                             playerId={game_status[`${quiz_role}_player_id`]} 
