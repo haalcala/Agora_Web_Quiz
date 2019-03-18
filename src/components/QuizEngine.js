@@ -21,6 +21,39 @@ const {
 
 const SHARE_ID = 2;
 
+/*
+
+this: 
+    .GAME_ID (*String) - the game (or session) id. Auto-generated when joining as a 'host' and manually entered if joining as 'player' or 'audience'
+    .PLAYER_ID - the user's unique id. Auto-generated when the app is started.
+
+    .my_answer (0-3) - when host, player1-3 select answer
+
+    .game_role ('host', 'player', 'audience') - when you enter the game as
+
+    .quiz_role ('host', 'player{1-3}') - 'host' is automatically assigned if you entered the game (game_role) as 'host'.
+
+    .video_stream_id - the current user's video id    .{host|player{1-3}}_video_stream_id (true/false) - a flag if the x_video_stream_id has already been rendered (rtcEngine.subscribe)
+
+    .game_status:
+
+        .state (0-3) - 0 - uninitialised; 1 - waiting for players; 2 - started; 3 - ended
+
+        .player{1-3}_player_id (*String) - The respective player's playerId
+        .player{1-3}_video_stream_id (*Number) - The respective player's Agora video id
+
+        .player{1-3}_answered (true/false) - when a player already sent an answer
+        .player{1-3}_answer_correct (true/false) - when the host send an answer and whether the each player's answer is correct or not
+
+        .host_player_id (*String) - the host player's playerId
+        .host_video_stream_id (*Number) - The host's Agora video id
+
+        .questionId (*String) - the unique id for the question.
+        .question (*String) - the current question
+        .question_answers [*String] - the answer options for the current question
+        .answer (0-3) - the answer provided by the host
+*/
+
 export default class QuizEngine {
     PLAYER_ID = shortid.generate();
 
