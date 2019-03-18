@@ -102,7 +102,7 @@ export default function(props) {
                             Enter Game ID:
                         </div>
                         <div>
-                            <input type='text' onChange={e => setState({...state, _GAME_ID: e.target.value})} value={state._GAME_ID}></input>
+                            <input type='text' onChange={e => setState({...state, _GAME_ID: e.target.value})} defaultValue={state._GAME_ID}></input>
                         </div>
                         <div>
                             <button onClick={joinGame}>Done</button>

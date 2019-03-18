@@ -156,14 +156,13 @@ export default class QuizEngine {
 
             console.log('---- msg', msg, typeof(msg));
             
-			const { state } = this;
-            const { game_status, quizRole } = state;
+			const { game_status, game_role } = this;
 
             const [command, val] = typeof(msg) === "string" && msg.split(",") || [];
 
-            console.log('state', state, 'command', command, 'val', val);
+            console.log('command', command, 'val', val, 'game_status', game_status);
 
-            if (quizRole === QUIZ_ROLE_HOST) {
+            if (game_role === QUIZ_ROLE_HOST) {
                 if (command === 'answer') {
                     _.times(4).map(i => {
                         if (game_status[`player${i+1}_player_id`] === account) {
@@ -199,7 +198,7 @@ export default class QuizEngine {
                     }        
                 }
             }
-            else if (quizRole === QUIZ_ROLE_AUDIENCE || quizRole === QUIZ_ROLE_PLAYER) {
+            else if (game_role === QUIZ_ROLE_AUDIENCE || game_role === QUIZ_ROLE_PLAYER) {
                 if (msg.game_status) {
                     console.log('setting new game_status');
 
@@ -221,7 +220,7 @@ export default class QuizEngine {
 			const { state } = this;
 			const { game_status } = state;
 
-			if (state.quizRole === QUIZ_ROLE_HOST) {
+			if (state.game_role === QUIZ_ROLE_HOST) {
 				_.times(3).map(n => {
 					const player_key = `player${n}_player_id`;
 					if (game_status[player_key] === account) {
@@ -244,7 +243,7 @@ export default class QuizEngine {
 
 			// console.log('game_status.state', game_status.state);
 
-            state.quizIsOn && state.quizRole === QUIZ_ROLE_HOST && await signal.sendMessage(account, JSON.stringify({game_status}));
+            state.quizIsOn && state.game_role === QUIZ_ROLE_HOST && await signal.sendMessage(account, JSON.stringify({game_status}));
 		});
 
 		signal.channelEmitter.on('onChannelAttrUpdated', async (key, val, op, ...args) => {
@@ -307,12 +306,12 @@ export default class QuizEngine {
 
 			state.video_stream_id = uid;
 
-			if (state.quizRole === QUIZ_ROLE_HOST) {
+			if (state.game_role === QUIZ_ROLE_HOST) {
 				game_status.host_video_stream_id = uid;
 
 				this.setupVideoPanels();
             }
-            else if (state.quizRole === QUIZ_ROLE_PLAYER && state.game_role) {
+            else if (state.game_role === QUIZ_ROLE_PLAYER && state.game_role) {
                 if (!game_status[state.game_role + '_video_stream_id'] && state.video_stream_id) {
                     process.nextTick(() => {
                         this.setChannelAttribute('video_stream_id', [state.game_role, state.video_stream_id].join(','));
@@ -513,7 +512,7 @@ export default class QuizEngine {
                     if (game_role) {
                         console.log('Successfully joined game as', game_role);
 
-                        // this.setState({ quizIsOn: true, quizRole: QUIZ_ROLE_PLAYER, game_id, current_state: `Joined and awaiting quiz start from host.` });
+                        // this.setState({ quizIsOn: true, game_role: QUIZ_ROLE_PLAYER, game_id, current_state: `Joined and awaiting quiz start from host.` });
 
                         // this.handleJoin();
 
@@ -584,10 +583,10 @@ export default class QuizEngine {
     /**
      * Only applies to 'player'
      */
-    requestAssignQuizRole = async () => {
+    requestAssigngame_role = async () => {
         const {game_status, signal} = this;
 
-        console.log('[QuizEngine.js] requestAssignQuizRole:: ', );
+        console.log('[QuizEngine.js] requestAssigngame_role:: ', );
         
         await signal.sendMessage(game_status.host_player_id, "assign_player");
     };
@@ -595,10 +594,10 @@ export default class QuizEngine {
     /**
      * Only applies to 'host'
      */
-    assignQuizRole = async (new_player_id) => {
+    assigngame_role = async (new_player_id) => {
         const {game_status} = this;
 
-        console.log('[QuizEngine.js] assignQuizRole:: new_player_id', new_player_id);
+        console.log('[QuizEngine.js] assigngame_role:: new_player_id', new_player_id);
         
         let player_role;
         
@@ -609,7 +608,7 @@ export default class QuizEngine {
             }
         });
 
-        console.log('assignQuizRole:: player_role', player_role, 'game_status', game_status);
+        console.log('assigngame_role:: player_role', player_role, 'game_status', game_status);
 
         setImmediate(() => {
             if (this.onPlayerJoin) {
