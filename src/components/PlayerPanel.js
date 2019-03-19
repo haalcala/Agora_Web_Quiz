@@ -44,7 +44,7 @@ export default function PlayerPanel(props) {
         console.log(`[${quiz_role}]:: `, 'useEffect:: dom', dom);
 
         if (videoStreamId) {
-            if (quiz_role === quiz_engine.game_role) {
+            if (videoStreamId === quiz_engine.video_stream_id) {
                 quiz_engine.setupLocalVideo(dom);
             }
             else {
