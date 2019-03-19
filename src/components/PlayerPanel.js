@@ -5,11 +5,10 @@ import {Col} from 'reactstrap';
 import _ from 'lodash';
 
 export default function PlayerPanel(props) { 
-    const {quiz_role, quiz_engine, answered, playerId, my_answer} = props;
+    const {quiz_role, quiz_engine, answered, playerId, my_answer, videoStreamId} = props;
     const {game_status} = quiz_engine;
 
     const [state, setState] = useState({joined: false});
-    const [state2, setState2] = useState({count: 0});
     
     console.log(`[${quiz_role}]:: `, 'PlayerPanel:: props', props, 'state', state);
 
@@ -40,28 +39,37 @@ export default function PlayerPanel(props) {
 
     useEffect(() => {
         // console.log(`[${quiz_role}]:: `, 'useEffect:: 111 props', props, 'just_joined', just_joined);
+        let dom = document.querySelector(`#video-${quiz_role}`);
+        
+        console.log(`[${quiz_role}]:: `, 'useEffect:: dom', dom);
+
+        if (videoStreamId && quiz_role === quiz_engine.game_role) {
+            quiz_engine.setupLocalVideo(dom);
+        }
         
         setTimeout(() => {
             // console.log(`[${quiz_role}]:: `, 'useEffect:: 222 props', props, 'just_joined', just_joined);
             setState({...state})
         }, 600);
-    }, [playerId, my_answer]);
+    }, [playerId, my_answer, videoStreamId]);
 
     // console.log(`[${quiz_role}]:: `, 'player label classes', ['player-label', just_joined ? 'player_joined' : ''].join(' '));
     // console.log(`[${quiz_role}]:: `, 'player_answer_tab classes', ['player_answer_tab', answered ? 'player_new_answer' : '', just_answered ? 'rotate-scale-up' : ' '].join(' '));
     
     
-    console.log(`[${quiz_role}]:: `, 'quiz_role.indexOf(\'host\')', quiz_role.indexOf('host'));
-    console.log(`[${quiz_role}]:: `, 'quiz_role.indexOf(\'player\')', quiz_role.indexOf('player'));
-    console.log(`[${quiz_role}]:: `, 'quiz_role === quiz_engine.game_role', quiz_role === quiz_engine.game_role);
-    console.log(`[${quiz_role}]:: `, 'answered', answered);
-    console.log(`[${quiz_role}]:: `, 'quiz_role', quiz_role);
+    // console.log(`[${quiz_role}]:: `, 'quiz_role.indexOf(\'host\')', quiz_role.indexOf('host'));
+    // console.log(`[${quiz_role}]:: `, 'quiz_role.indexOf(\'player\')', quiz_role.indexOf('player'));
+    // console.log(`[${quiz_role}]:: `, 'quiz_role === quiz_engine.game_role', quiz_role === quiz_engine.game_role);
+    // console.log(`[${quiz_role}]:: `, 'answered', answered);
+    // console.log(`[${quiz_role}]:: `, 'quiz_role', quiz_role);
 
     return (
         <div className={["player-icon", playerId ? 'shadow-drop-center' : ''].join(' ')} style={{_border: "1px dashed green"}}>
-            <div className="window-item" id={"video-" + quiz_role}>
-                <img src={require("./player.jpg")} 
-                    style={{display: "block", width: "-webkit-fill-available", paddingTop: "1em"}}/>
+            <div>
+                <div className="window-item" id={"video-" + quiz_role}>
+                    <img src={require("./player.jpg")} 
+                        style={{display: (videoStreamId ? 'none' : 'block'), width: "-webkit-fill-available", paddingTop: "1em"}}/>
+                </div>
             </div>
             <div className={['player-label', just_joined ? 'player_joined' : ''].join(' ')}>
                 {playerId && `${_.upperFirst(quiz_role)} ${playerId == quiz_engine.PLAYER_ID && '(ME)' || ''}` || "..."}

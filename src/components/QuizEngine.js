@@ -3,10 +3,12 @@ import _ from 'lodash';
 import shortid from 'shortid';
 
 import SignalingClient from '../lib/SignalingClient';
+import AgoraRtcEngine from '../lib/AgoraRtcEngine';
 
 import Util from '../utils/index';
 
 import {APP_ID} from '../utils/settings';
+import { EventEmitter } from 'events';
 
 const {
     PLAYER_KEYS, 
@@ -70,6 +72,8 @@ export default class QuizEngine {
     constructor(game_role) {
         const {game_status} = this;
 
+        const {AgoraRTC} = global;
+
         console.log('[QuizEngine.js|constructor]('+game_role+'):: ----------------------------------------------------------------');
         
         this.game_role =  game_role;
@@ -86,8 +90,9 @@ export default class QuizEngine {
         console.log('[QuizEngine.js|constructor]('+game_role+'):: game_status', game_status);
 
         this.signal = new SignalingClient(APP_ID);
-        // this.rtcEngine = new AgoraRtcEngine();
-        this.rtcEngine = AgoraRTC.createClient({mode: 'live', codec: "h264"}); // eslint-disable-line 
+        this.rtcEngine = new AgoraRtcEngine();
+
+        this.rtcEngine.initialize(APP_ID);
 
         console.log('this.signal', this.signal);
         console.log('this.rtcEngine', this.rtcEngine);
@@ -117,6 +122,44 @@ export default class QuizEngine {
      */
     onGameStatusUpdate = async () => {};
 
+    configureVideo = config => {
+
+    };
+
+    /**
+     * 
+     */
+    enableVideo = async () => {
+        const {rtcEngine, GAME_ID, videoProfile} = this;
+
+        rtcEngine.setChannelProfile(1)
+        rtcEngine.setClientRole(1)
+        rtcEngine.setAudioProfile(0, 1)
+        rtcEngine.enableVideo()
+        rtcEngine.setLogFile('~/agoraabc.log')
+        rtcEngine.enableLocalVideo(true)
+        rtcEngine.enableWebSdkInteroperability(true)
+        rtcEngine.setVideoProfile(videoProfile, false)
+        rtcEngine.enableDualStreamMode(true)
+        rtcEngine.enableAudioVolumeIndication(1000, 3)
+        // rtcEngine.enableDualStream(function() {
+        //	 console.log("Enable dual stream success!")
+        //	 }, function(err) {
+        //	 console,log(err)
+        //	 })
+
+        console.log("Joining chanel", GAME_ID);
+
+        rtcEngine.joinChannel(null, GAME_ID, '', Number(`${new Date().getTime()}`.slice(7)));
+    };
+
+    /**
+     * 
+     */
+    getVideoDevices = async () => {
+        return this.rtcEngine.getVideoDevices();
+    };
+      
     /**
      * Only applies to 'host'
      */
@@ -132,6 +175,9 @@ export default class QuizEngine {
 		console.log('[QuizEngine.js] setGameStatus:: 2222 result', result);
 	};
 
+    /**
+     * Internal funtion
+     */
 	subscribeEvents = () => {
         console.log('[QuizEngine.js] subscribeEvents:: ', );
 
@@ -289,7 +335,7 @@ export default class QuizEngine {
             }
 		});
 
-		this.rtcEngine.on('joinedchannel', (channel, uid, elapsed) => {
+		this.rtcEngine.on('joinedchannel', async (channel, uid, elapsed) => {
             const { game_status } = this;
             
 			console.log('---===>>> this.rtcEngine.on(\'joinedchannel\'):: channel, uid, elapsed', channel, uid, elapsed);
@@ -299,7 +345,7 @@ export default class QuizEngine {
 			if (this.game_role === QUIZ_ROLE_HOST) {
 				game_status.host_video_stream_id = uid;
 
-				this.setupVideoPanels();
+				await this.setGameStatus();
             }
             else if (this.game_role === QUIZ_ROLE_PLAYER && this.game_role) {
                 if (!game_status[this.game_role + '_video_stream_id'] && this.video_stream_id) {
@@ -418,6 +464,8 @@ export default class QuizEngine {
                 game_status.host_player_id = PLAYER_ID;
     
                 console.log('Created a new game successfully.');
+
+                await this.enableVideo();
 
                 await this.setGameStatus();
             }
@@ -628,4 +676,13 @@ export default class QuizEngine {
 
         return player_role;
     };
+
+    logout = async () => {
+
+    };
+
+    setupLocalVideo(dom) {
+        this.rtcEngine.setupLocalVideo(dom);
+    }
 }
+

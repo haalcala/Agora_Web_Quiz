@@ -1,6 +1,8 @@
 import React, {useState, useEffect} from 'react';
 
 export default props => {
+    const {quiz_engine} = props;
+
     const [state, setState] = useState({});
 
     useEffect(() => {
@@ -10,7 +12,16 @@ export default props => {
         else {
             if (props.onClose) props.onClose();
         } 
+        
+        (async () => {
+            const video_devices = await quiz_engine.getVideoDevices();
+    
+            console.log('video_devices', video_devices);
+        })();
     }, [state.show_panel]);
+
+    console.log('[CameraConfigPanel.js]:: quiz_engine', quiz_engine);
+
 
     return (
         <div className='settings-item-panel'>

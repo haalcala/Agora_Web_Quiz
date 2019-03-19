@@ -8,7 +8,7 @@ import PlayerPanel from './PlayerPanel';
 import QuestionPanel from './QuestionPanel';
 
 export default function(props) {
-    const [state, setState] = useState({_GAME_ID: '4xVUR_SMK5'});
+    const [state, setState] = useState({_GAME_ID: 'TA62GTbS1l'});
 
     const {quiz_engine} = props;
     const {game_role, PLAYER_ID, game_status} = quiz_engine;
@@ -100,6 +100,7 @@ export default function(props) {
                             quiz_engine={quiz_engine} 
                             quiz_role={quiz_role} 
                             playerId={game_status[`${quiz_role}_player_id`]} 
+                            videoStreamId={game_status[`${quiz_role}_video_stream_id`]} 
                             answered={!!game_status[`${quiz_role}_answered`]}></PlayerPanel>
 
                         {/* {quiz_role.indexOf(game_role) !== 0 ? (
