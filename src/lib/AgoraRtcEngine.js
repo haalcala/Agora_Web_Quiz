@@ -88,7 +88,6 @@ class AgoraRtcEngine extends EventEmitter {
 
 	};
 
-
 	joinChannel(token, channel, info, uid) {
 		return new Promise((resolve, reject) => {
 			let { client, camera, microphone, videoSource, audioSource } = this;
@@ -157,8 +156,46 @@ class AgoraRtcEngine extends EventEmitter {
 	}
 
 	subscribe(uid, dom) {
+		console.log('[AgoraRtcEngine.js] subscribe::');
+		
+		return new Promise((resolve, reject) => {
+			let { client } = this;
 
-	}
+			let remoteStream = AgoraRTC.createStream({ streamID: uid, audio: true, video: true });
+	
+			remoteStream.setVideoProfile('720p_3');
+		
+			// The user has granted access to the camera and mic. 
+			remoteStream.on("accessAllowed", function () {
+				console.log("[AgoraRtcEngine.js] subscribe::accessAllowed");
+			});
+	
+			// The user has denied access to the camera and mic.
+			remoteStream.on("accessDenied", function () {
+				console.log("[AgoraRtcEngine.js] subscribe::accessDenied");
+			});
+	
+			remoteStream.init(function () {
+				console.log("[AgoraRtcEngine.js] subscribe::getUserMedia successfully");
+	
+				remoteStream.play(dom.id, {fit: 'cover'});
+	
+				client.subscribe(remoteStream, function (err) {
+					console.log("[AgoraRtcEngine.js] subscribe::Publish local stream error: " + err);
+				});
+	
+				client.on('stream-published', function (evt) {
+					console.log("[AgoraRtcEngine.js] subscribe:: Publish local stream successfully");
+				});
+	
+				resolve(remoteStream);
+			}, function (err) {
+				console.log("[AgoraRtcEngine.js] subscribe:: getUserMedia failed", err);
+	
+				reject(err);
+			});
+		});
+}
 
 	getDevices(filter) {
 		return new Promise(resolve => {

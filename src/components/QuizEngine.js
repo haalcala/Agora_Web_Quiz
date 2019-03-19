@@ -150,7 +150,7 @@ export default class QuizEngine {
 
         console.log("Joining chanel", GAME_ID);
 
-        rtcEngine.joinChannel(null, GAME_ID, '', Number(`${new Date().getTime()}`.slice(7)));
+        await rtcEngine.joinChannel(null, GAME_ID, '', Number(`${new Date().getTime()}`.slice(7)));
     };
 
     /**
@@ -556,6 +556,8 @@ export default class QuizEngine {
 
                         // this.handleJoin();
 
+                        this.enableVideo();
+
                         this.onPlayerJoin();
                     }
                     else {
@@ -683,6 +685,10 @@ export default class QuizEngine {
 
     setupLocalVideo(dom) {
         this.rtcEngine.setupLocalVideo(dom);
+    }
+
+    subscribe(uid, dom) {
+        this.rtcEngine.subscribe(uid, dom);
     }
 }
 
