@@ -157,12 +157,10 @@ export default class QuizEngine {
             console.log('command', command, 'val', val, 'game_status', game_status);
 
             if (game_role === QUIZ_ROLE_HOST) {
-                if (command === 'answer') {
-                    val = parseInt(val);
-                    
+                if (command === 'answer') {                    
                     _.times(4).map(i => {
                         if (game_status[`player${i+1}_player_id`] === account) {
-                            this[`player${i+1}_answer`] = val;
+                            this[`player${i+1}_answer`] = parseInt(val);
 
                             game_status[`player${i+1}_answered`] = true;
     
