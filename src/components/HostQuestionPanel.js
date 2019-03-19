@@ -37,6 +37,10 @@ export default props => {
     const handleSendNextQuestion = async () => {
         const {game_status} = state;
 
+        delete state.selected_answer;
+
+        setState({...state});
+
         await quiz_engine.sendQuestion(state.question, [...state.next_question_answers]);
     };
 
