@@ -70,7 +70,10 @@ export default function PlayerPanel(props) {
                 {answered && (
                     (quiz_engine.game_role === 'host' 
                         || (quiz_role.indexOf('player') === 0 && quiz_role === quiz_engine.game_role)
-                    ) ? 'ABCD'.charAt(my_answer) : '!')
+                    ) ? 'ABCD'.charAt(my_answer) 
+                    : 
+                        (game_status.answer >= 0 ?(game_status[`${quiz_role}_answer_correct`] ? '👍🏻' : '👎🏻') : '!')
+                    )
                 || null}
             </div>
         </div>

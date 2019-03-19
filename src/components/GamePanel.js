@@ -20,6 +20,10 @@ export default function(props) {
             quiz_engine.onGameStatusUpdate = () => {
                 console.log(`[GamePanel.js]:: onGameStatusUpdate`);
 
+                if (state.current_questionId != game_status.questionId) {
+                    delete state.answer;
+                }
+
                 setState({...state});
             };
 
@@ -59,6 +63,8 @@ export default function(props) {
 
     const onSelectAnswer = async answer => {
         console.log('[GamePanel.js]:: onSelectAnswer: answer', answer);
+
+        setState({...state, answer})
 
         await quiz_engine.sendAnswer(answer);
     };

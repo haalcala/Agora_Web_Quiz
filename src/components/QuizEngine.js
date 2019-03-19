@@ -158,6 +158,8 @@ export default class QuizEngine {
 
             if (game_role === QUIZ_ROLE_HOST) {
                 if (command === 'answer') {
+                    val = parseInt(val);
+                    
                     _.times(4).map(i => {
                         if (game_status[`player${i+1}_player_id`] === account) {
                             this[`player${i+1}_answer`] = val;
