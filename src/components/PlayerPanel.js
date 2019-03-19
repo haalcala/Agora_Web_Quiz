@@ -68,7 +68,7 @@ export default function PlayerPanel(props) {
             </div>
             <div className={['player_answer_tab', answered ? 'player_new_answer' : '', just_answered ? 'rotate-scale-up' : ' '].join(' ')} style={{}}>
                 {answered && (
-                    (quiz_role.indexOf('host') === 0 
+                    (quiz_engine.game_role === 'host' 
                         || (quiz_role.indexOf('player') === 0 && quiz_role === quiz_engine.game_role)
                     ) ? 'ABCD'.charAt(my_answer) : '!')
                 || null}

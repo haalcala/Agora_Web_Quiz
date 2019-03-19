@@ -279,6 +279,7 @@ code {
     width: 300px;
     box-shadow: 3px 3px gray;
     cursor: unset;
+    height: unset;
     background: white;
 }
 
