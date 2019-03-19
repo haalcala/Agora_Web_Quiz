@@ -539,10 +539,20 @@ export default class QuizEngine {
      * Only applies to 'host'
      */
     sendQuestion = async (question, answer_options) => {
+        const {game_status} = this;
+
         console.log('[QuizEngine.js] sendQuestion:: question', question, 'answer_options', answer_options);
 
-        this.game_status.question = question;
-        this.game_status.question_answers = answer_options;
+        game_status.question = question;
+        game_status.question_answers = answer_options;
+        game_status.questionId = shortid.generate();
+        
+        delete game_status.answer;
+
+        _.times(3, x => `player${x+1}`).map(player_key => {
+            delete game_status[`${player_key}_answered`];
+            delete this[`${player_key}_answer`];
+        });
 
         await this.setGameStatus();
 
