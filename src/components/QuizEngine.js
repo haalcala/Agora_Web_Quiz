@@ -347,7 +347,7 @@ export default class QuizEngine {
 
 				await this.setGameStatus();
             }
-            else if (this.game_role === QUIZ_ROLE_PLAYER && this.game_role) {
+            else if (this.game_role.indexOf('player') === 0) {
                 if (!game_status[this.game_role + '_video_stream_id'] && this.video_stream_id) {
                     process.nextTick(() => {
                         this.setChannelAttribute('video_stream_id', [this.game_role, this.video_stream_id].join(','));
@@ -514,6 +514,8 @@ export default class QuizEngine {
             const channel = this.channel = await signal.join(game_id);
 
             this.GAME_ID = game_id;
+            
+            this.enableVideo();
 
             let start = new Date();
             
@@ -555,8 +557,6 @@ export default class QuizEngine {
                         // this.setState({ quizIsOn: true, game_role: QUIZ_ROLE_PLAYER, game_id, current_state: `Joined and awaiting quiz start from host.` });
 
                         // this.handleJoin();
-
-                        this.enableVideo();
 
                         this.onPlayerJoin();
                     }
@@ -661,7 +661,7 @@ export default class QuizEngine {
         
         let player_role;
         
-        PLAYER_KEYS.map(player_key => {            
+        PLAYER_KEYS.map(player_key => {
             if (!player_role && !game_status[player_key + "_player_id"]) {
                 game_status[player_key + "_player_id"] = new_player_id;
                 player_role = player_key;

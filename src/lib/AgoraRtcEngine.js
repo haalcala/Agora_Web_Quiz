@@ -156,7 +156,7 @@ class AgoraRtcEngine extends EventEmitter {
 	}
 
 	subscribe(uid, dom) {
-		console.log('[AgoraRtcEngine.js] subscribe::');
+		console.log('[AgoraRtcEngine.js] subscribe:: uid, dom', uid, dom);
 		
 		return new Promise((resolve, reject) => {
 			let { client } = this;
@@ -174,28 +174,12 @@ class AgoraRtcEngine extends EventEmitter {
 			remoteStream.on("accessDenied", function () {
 				console.log("[AgoraRtcEngine.js] subscribe::accessDenied");
 			});
-	
-			remoteStream.init(function () {
-				console.log("[AgoraRtcEngine.js] subscribe::getUserMedia successfully");
-	
-				remoteStream.play(dom.id, {fit: 'cover'});
-	
-				client.subscribe(remoteStream, function (err) {
-					console.log("[AgoraRtcEngine.js] subscribe::Publish local stream error: " + err);
-				});
-	
-				client.on('stream-published', function (evt) {
-					console.log("[AgoraRtcEngine.js] subscribe:: Publish local stream successfully");
-				});
-	
-				resolve(remoteStream);
-			}, function (err) {
-				console.log("[AgoraRtcEngine.js] subscribe:: getUserMedia failed", err);
-	
-				reject(err);
-			});
+
+			remoteStream.play(dom.id, {fit: 'cover'});
+
+			resolve(remoteStream);
 		});
-}
+	}
 
 	getDevices(filter) {
 		return new Promise(resolve => {

@@ -39,20 +39,20 @@ export default function PlayerPanel(props) {
 
     useEffect(() => {
         // console.log(`[${quiz_role}]:: `, 'useEffect:: 111 props', props, 'just_joined', just_joined);
-        let dom = document.querySelector(`#video-${quiz_role}`);
-        
-        console.log(`[${quiz_role}]:: `, 'useEffect:: dom', dom);
-
-        if (videoStreamId) {
-            if (videoStreamId === quiz_engine.video_stream_id) {
-                quiz_engine.setupLocalVideo(dom);
-            }
-            else {
-                quiz_engine.subscribe(videoStreamId, dom);
-            }
-        }
-        
         setTimeout(() => {
+            let dom = document.querySelector(`#video-${quiz_role}`);
+            
+            console.log(`[${quiz_role}]:: `, 'useEffect:: dom', dom);
+    
+            if (videoStreamId) {
+                if (videoStreamId === quiz_engine.video_stream_id) {
+                    quiz_engine.setupLocalVideo(dom);
+                }
+                else {
+                    quiz_engine.subscribe(videoStreamId, dom);
+                }
+            }
+            
             // console.log(`[${quiz_role}]:: `, 'useEffect:: 222 props', props, 'just_joined', just_joined);
             setState({...state})
         }, 600);
