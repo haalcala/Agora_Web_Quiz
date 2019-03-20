@@ -301,7 +301,7 @@ export default class QuizEngine {
     
                 ['host', 'player1', 'player2', 'player3'].map(async game_role => {
                     if (game_status[game_role + '_player_id'] == PLAYER_ID) {
-                        this.game_role = game_role;
+                        this.quiz_role = game_role;
                     }
                 });
 
