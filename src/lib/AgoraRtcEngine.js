@@ -47,6 +47,52 @@ class AgoraRtcEngine extends EventEmitter {
 
 				reject(err);
 			});
+
+			  client.on('error', (err) => {
+				console.log("Got error msg:", err.reason);
+				if (err.reason === 'DYNAMIC_KEY_TIMEOUT') {
+				  client.renewChannelKey(this._channel, ()=> {
+					console.log("Renew channel key successfully");
+				  }, (err)=> {
+					console.log("Renew channel key failed: ", err);
+				  });
+				}
+			  });
+			
+			  client.on('stream-added',  (evt) => {
+				var stream = evt.stream;
+				console.log("New stream added: " + stream.getId());
+				console.log("Subscribe ", stream);
+				// client.subscribe(stream,  (err) => {
+				//   console.log("Subscribe stream failed", err);
+				// });
+				this.streams[stream.getId()] = stream;
+			  });
+			
+			  client.on('stream-subscribed',  (evt) => {
+				var stream = evt.stream;
+				console.log("Subscribe remote stream successfully: " + stream.getId());
+				// if ($('div#video #agora_remote'+stream.getId()).length === 0) {
+				//   $('div#video').append('<div id="agora_remote'+stream.getId()+'" style="float:left; width:810px;height:607px;display:inline-block;"></div>');
+				// }
+				// stream.play('agora_remote' + stream.getId());
+			  });
+			
+			  client.on('stream-removed',  (evt) => {
+				var stream = evt.stream;
+				stream.stop();
+				// $('#agora_remote' + stream.getId()).remove();
+				console.log("Remote stream is removed " + stream.getId());
+			  });
+			
+			  client.on('peer-leave',  (evt) => {
+				var stream = evt.stream;
+				if (stream) {
+				  stream.stop();
+				//   $('#agora_remote' + stream.getId()).remove();
+				  console.log(evt.uid + " leaved from this channel");
+				}
+			  });
 		});
 	}
 
@@ -167,25 +213,11 @@ class AgoraRtcEngine extends EventEmitter {
 		return new Promise((resolve, reject) => {
 			let { client } = this;
 
-			let remoteStream = AgoraRTC.createStream({ streamID: uid, audio: true, video: true });
+			const remoteStream = this.streams[uid];
 	
-			remoteStream.setVideoProfile('720p_3');
-		
-			// The user has granted access to the camera and mic. 
-			remoteStream.on("accessAllowed", function () {
-				console.log("[AgoraRtcEngine.js] subscribe::accessAllowed");
-			});
-	
-			// The user has denied access to the camera and mic.
-			remoteStream.on("accessDenied", function () {
-				console.log("[AgoraRtcEngine.js] subscribe::accessDenied");
-			});
-
 			client.subscribe(remoteStream);
 
 			remoteStream.play(dom.id, {fit: 'cover'});
-
-			this.streams[uid] = remoteStream;
 
 			resolve(remoteStream);
 		});
