@@ -222,9 +222,13 @@ class AgoraRtcEngine extends EventEmitter {
 			console.log('[AgoraRtcEngine.js] subscribe:: remoteStream', remoteStream);
 	
 			if (remoteStream) {
-				client.subscribe(remoteStream);
-	
-				remoteStream.play(dom.id, {fit: 'cover'});
+				const timer_id = setTimeout(() => {
+					remoteStream.play(dom.id, {fit: 'cover'});
+				}, 1000);
+
+				client.subscribe(remoteStream, (err) => {
+					clearTimeout(timer_id);
+				});
 			}
 
 			resolve(remoteStream);
