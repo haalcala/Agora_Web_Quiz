@@ -154,7 +154,7 @@ class AgoraRtcEngine extends EventEmitter {
 				let camera = videoSource;
 				let microphone = audioSource;
 		
-				let localStream = this.localStream = AgoraRTC.createStream({ streamID: uid, audio: true, cameraId: camera, microphoneId: microphone, video: true, screen: false });
+				let localStream = this.localStream = AgoraRTC.createStream({ streamId: uid, audio: true, cameraId: camera, microphoneId: microphone, video: true, screen: false });
 				//localStream = AgoraRTC.createStream({streamID: uid, audio: false, cameraId: camera, microphoneId: microphone, video: false, screen: true, extensionId: 'minllpmhdgpndnkomcoccfekfegnlikg'});
 	
 				localStream.setVideoProfile('720p_3');
@@ -216,7 +216,8 @@ class AgoraRtcEngine extends EventEmitter {
 		return new Promise((resolve, reject) => {
 			let { client } = this;
 
-			const remoteStream = this.streams[uid];
+			// const remoteStream = this.streams[uid];
+			const remoteStream = AgoraRTC.createStream({streamId: uid, video: true, audio: true});
 
 			console.log('[AgoraRtcEngine.js] subscribe:: remoteStream', remoteStream);
 	
