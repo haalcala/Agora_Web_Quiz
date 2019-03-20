@@ -83,6 +83,8 @@ class AgoraRtcEngine extends EventEmitter {
 				stream.stop();
 				// $('#agora_remote' + stream.getId()).remove();
 				console.log("Remote stream is removed " + stream.getId());
+
+				delete this.streams[stream.getId()];
 			  });
 			
 			  client.on('peer-leave',  (evt) => {
@@ -91,6 +93,7 @@ class AgoraRtcEngine extends EventEmitter {
 				  stream.stop();
 				//   $('#agora_remote' + stream.getId()).remove();
 				  console.log(evt.uid + " leaved from this channel");
+				  delete this.streams[stream.getId()];
 				}
 			  });
 		});
@@ -214,10 +217,14 @@ class AgoraRtcEngine extends EventEmitter {
 			let { client } = this;
 
 			const remoteStream = this.streams[uid];
-	
-			client.subscribe(remoteStream);
 
-			remoteStream.play(dom.id, {fit: 'cover'});
+			console.log('[AgoraRtcEngine.js] subscribe:: remoteStream', remoteStream);
+	
+			if (remoteStream) {
+				client.subscribe(remoteStream);
+	
+				remoteStream.play(dom.id, {fit: 'cover'});
+			}
 
 			resolve(remoteStream);
 		});
