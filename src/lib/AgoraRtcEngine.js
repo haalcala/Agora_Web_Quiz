@@ -9,6 +9,8 @@ const { AgoraRTC } = global;
  * @class AgoraRtcEngine
  */
 class AgoraRtcEngine extends EventEmitter {
+	streams = {};
+
 	constructor() {
 		super();
 
@@ -61,7 +63,7 @@ class AgoraRtcEngine extends EventEmitter {
 	};
 
 	enableVideo = () => {
-
+		this.enable_video = true;
 	};
 
 	setLogFile = (path) => {
@@ -69,7 +71,7 @@ class AgoraRtcEngine extends EventEmitter {
 	};
 
 	enableLocalVideo = (enable) => {
-
+		this.enable_local_video = true;
 	};
 
 	enableWebSdkInteroperability = (enable) => {
@@ -90,16 +92,55 @@ class AgoraRtcEngine extends EventEmitter {
 
 	joinChannel(token, channel, info, uid) {
 		return new Promise((resolve, reject) => {
-			let { client, camera, microphone, videoSource, audioSource } = this;
+			let { client } = this;
 	
 			client.join(token, channel, null, (uid) => {
 				console.log("User " + uid + " join channel successfully");
 
+				this._channel = channel;
 				this.local = uid;
 
-				setImmediate(this.emit.bind(this, 'joinedchannel', channel, uid, 0));
+				let { client, videoSource, audioSource, local } = this;
 	
-				resolve(uid);
+				let camera = videoSource;
+				let microphone = audioSource;
+		
+				let localStream = this.localStream = AgoraRTC.createStream({ streamID: uid, audio: true, cameraId: camera, microphoneId: microphone, video: true, screen: false });
+				//localStream = AgoraRTC.createStream({streamID: uid, audio: false, cameraId: camera, microphoneId: microphone, video: false, screen: true, extensionId: 'minllpmhdgpndnkomcoccfekfegnlikg'});
+	
+				localStream.setVideoProfile('720p_3');
+		
+				// The user has granted access to the camera and mic. 
+				localStream.on("accessAllowed", function () {
+					console.log("accessAllowed");
+				});
+		
+				// The user has denied access to the camera and mic.
+				localStream.on("accessDenied", function () {
+					console.log("accessDenied");
+				});
+		
+				localStream.init(() => {
+					console.log("getUserMedia successfully");
+	
+					client.publish(localStream, (err) => {
+						console.log("Publish local stream error: " + err);
+					});
+					
+					client.on('stream-published', (evt) => {
+						console.log("Publish local stream successfully");
+						setImmediate(this.emit.bind(this, 'joinedchannel', this._channel, this.local, 0));
+
+						resolve(localStream);
+					});
+			
+				}, function (err) {
+					console.log("getUserMedia failed", err);
+	
+					reject(err);
+				});
+
+				// resolve(uid);
 			}, function (err) {
 				console.log("Join channel failed", err);
 
@@ -112,47 +153,12 @@ class AgoraRtcEngine extends EventEmitter {
 		console.log('setupLocalVideo:: dom', dom);
 
 		return new Promise((resolve, reject) => {
-			let { client, videoSource, audioSource, local } = this;
-	
-			let camera = videoSource;
-			let microphone = audioSource;
-			let uid = local;
-	
-			let localStream = this.localStream = AgoraRTC.createStream({ streamID: uid, audio: true, cameraId: camera, microphoneId: microphone, video: true, screen: false });
-			//localStream = AgoraRTC.createStream({streamID: uid, audio: false, cameraId: camera, microphoneId: microphone, video: false, screen: true, extensionId: 'minllpmhdgpndnkomcoccfekfegnlikg'});
+			const  {client, localStream} = this;
 
-			localStream.setVideoProfile('720p_3');
+			localStream.play(dom.id, {fit: 'cover', position: 'unset'});
 	
-			// The user has granted access to the camera and mic. 
-			localStream.on("accessAllowed", function () {
-				console.log("accessAllowed");
-			});
-	
-			// The user has denied access to the camera and mic.
-			localStream.on("accessDenied", function () {
-				console.log("accessDenied");
-			});
-	
-			localStream.init(function () {
-				console.log("getUserMedia successfully");
-
-				localStream.play(dom.id, {fit: 'cover', position: 'unset'});
-	
-				client.publish(localStream, function (err) {
-					console.log("Publish local stream error: " + err);
-				});
-	
-				client.on('stream-published', function (evt) {
-					console.log("Publish local stream successfully");
-				});
-
-				resolve(localStream);
-			}, function (err) {
-				console.log("getUserMedia failed", err);
-
-				reject(err);
-			});
-		});
+			resolve();
+	});
 	}
 
 	subscribe(uid, dom) {
@@ -175,7 +181,11 @@ class AgoraRtcEngine extends EventEmitter {
 				console.log("[AgoraRtcEngine.js] subscribe::accessDenied");
 			});
 
+			client.subscribe(remoteStream);
+
 			remoteStream.play(dom.id, {fit: 'cover'});
+
+			this.streams[uid] = remoteStream;
 
 			resolve(remoteStream);
 		});
