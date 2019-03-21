@@ -3,7 +3,7 @@ import React, {useState, useEffect} from 'react';
 import _ from 'lodash';
 
 export default props => {
-    const {game_status, game_role, quiz_role} = props;
+    const {game_status, game_role, quiz_role, quiz_engine} = props;
 
 	const [state, setState] = useState({
 		currentWindowId: -1,
@@ -14,7 +14,7 @@ export default props => {
 	const handleSelectAnswer = async (answer) => {
         console.log('QuestionPanel.handleSelectAnswer:: answer', answer);
 
-        if (game_role === 'player') {
+        if (quiz_engine.game_role != 'player') {
             return;
         }
 
