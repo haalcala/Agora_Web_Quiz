@@ -3,7 +3,7 @@ import React, {useState, useEffect} from 'react';
 import _ from 'lodash';
 
 export default props => {
-    const {game_status, game_role} = props;
+    const {game_status, game_role, quiz_role} = props;
 
 	const [state, setState] = useState({
 		currentWindowId: -1,
@@ -14,7 +14,7 @@ export default props => {
 	const handleSelectAnswer = async (answer) => {
         console.log('QuestionPanel.handleSelectAnswer:: answer', answer);
 
-        if (game_role.indexOf('player') !== 0) {
+        if (game_role === 'player') {
             return;
         }
 
@@ -41,34 +41,6 @@ export default props => {
     const { selected_answer } = state;
 
     return (
-        // <div className="card" style={{ border: "1px solid red", width: "100%", padding: "1em"}}>
-        //     <div className="card" style={{border: "1px solid green", height: "-webkit-fill-available"}}>
-        //         <div className="card" style={{width: "50em", margin: "auto", display: "block"}}>
-        //             <h1>Question:</h1>
-        //             <h1 style={{textAlign: "center"}}>
-        //                 {question}
-        //             </h1>
-        //             {answer ? (
-        //                 <div>
-        //                     <h1>Answer:</h1>
-        //                     <h1 style={{textAlign: "left", textDecoration: "underline", marginLeft: "3em"}}>
-        //                         {`${'ABCD'.charAt(answer)}. ${question_answers[answer]}`}
-        //                     </h1>
-        //                 </div>
-        //             ) : ""}
-        //         </div>
-        //     </div>
-        //     <div style={{visibility: "hidden"}}>1</div>
-        //     <div className="card" style={{border: "1px solid green", display: "block", columnGap: ".3em"}}>
-        //         <div style={{margin: "1em"}}>
-        //             {_.times(4).map(i => {
-        //                 return (
-        //                     <AnswerItem key={i} selected_answer={selected_answer} answer={answer} i={i} option={question_answers[i]} selectAnswer={this.selectAnswer}></AnswerItem>
-        //                 );
-        //             })}
-        //         </div>
-        //     </div>
-        // </div>
         <div style={{ _border: "1px dashed red", width: "100%", padding: "1em", display: (game_status.question ? 'flex' : 'none'), flexDirection: 'column'}}>
             <div style={{_border: '1px solid green', height: '50%', marginBottom: '1em'}}>
                 <div className="" style={{width: "50em", margin: "auto", display: (game_status.question ? 'block' : 'none')}}>
@@ -92,7 +64,7 @@ export default props => {
                     return (
                         <AnswerItem 
                             key={i} 
-                            isSelectable={game_role.indexOf('player')===0} 
+                            isSelectable={game_role === 'player'} 
                             selected_answer={selected_answer} 
                             answer={answer} 
                             i={i} 

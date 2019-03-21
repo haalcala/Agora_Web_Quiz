@@ -299,7 +299,7 @@ export default class QuizEngine {
             if (key === 'game_status') {
                 const game_status = val = JSON.parse(val);
     
-                ['host', 'player1', 'player2', 'player3'].map(async game_role => {
+                ['player1', 'player2', 'player3'].map(async game_role => {
                     if (game_status[game_role + '_player_id'] == PLAYER_ID) {
                         this.quiz_role = game_role;
                     }
@@ -325,11 +325,11 @@ export default class QuizEngine {
                 this.onGameStatusUpdate();
             }
             else if (key === 'video_stream_id' && game_role === QUIZ_ROLE_HOST) {
-                const [game_role, video_stream_id] = val.split(',');
+                const [quiz_role, video_stream_id] = val.split(',');
 
-                game_status[`${game_role}_video_stream_id`] = parseInt(video_stream_id);
+                game_status[`${quiz_role}_video_stream_id`] = parseInt(video_stream_id);
 
-                delete this[`${game_role}_video_stream_id`];
+                delete this[`${quiz_role}_video_stream_id`];
 
                 this.setGameStatus();
             }
@@ -347,10 +347,10 @@ export default class QuizEngine {
 
 				await this.setGameStatus();
             }
-            else if (this.game_role.indexOf('player') === 0) {
-                if (!game_status[this.game_role + '_video_stream_id'] && this.video_stream_id) {
+            else if (this.game_role === 'player') {
+                if (!game_status[this.quiz_role + '_video_stream_id'] && this.video_stream_id) {
                     process.nextTick(() => {
-                        this.setChannelAttribute('video_stream_id', [this.game_role, this.video_stream_id].join(','));
+                        this.setChannelAttribute('video_stream_id', [this.quiz_role, this.video_stream_id].join(','));
                     });
                 }
             }
@@ -519,7 +519,7 @@ export default class QuizEngine {
 
             let start = new Date();
             
-            let game_role, reason;
+            let quiz_role, reason;
             
             let timer_id = setInterval(async () => {
                 const {game_status} = this;
@@ -529,7 +529,7 @@ export default class QuizEngine {
 
                     _.times(4).map(i => {
                         if (game_status[`player${i+1}_player_id`] === PLAYER_ID) {
-                            game_role = `player${i+1}`
+                            quiz_role = `player${i+1}`
                         }
 
                         if (game_status[`player${i+1}_player_id`]) {
@@ -548,11 +548,11 @@ export default class QuizEngine {
                     }
                 }
                 
-                if (reason || game_role || (new Date() - start) >= 10000) {
+                if (reason || quiz_role || (new Date() - start) >= 10000) {
                     console.log('joinGame:: game_status', game_status);
 
-                    if (game_role) {
-                        console.log('Successfully joined game as', game_role);
+                    if (quiz_role) {
+                        console.log('Successfully joined game as', quiz_role);
 
                         // this.setState({ quizIsOn: true, game_role: QUIZ_ROLE_PLAYER, game_id, current_state: `Joined and awaiting quiz start from host.` });
 
@@ -629,8 +629,8 @@ export default class QuizEngine {
 
                 this.onGameStatusUpdate();
             }
-            else if (game_role.indexOf("player") === 0) {
-                this[this.game_role + "_answer"] = answer;
+            else if (game_role === "player") {
+                this[this.quiz_role + "_answer"] = answer;
 
                 await signal.sendMessage(game_status.host_player_id, "answer,"+answer);
             }
