@@ -294,7 +294,13 @@ class AgoraRtcEngine extends EventEmitter {
 	}
 
 	leaveChannel = async (channel) => {
-		await this.client.leave();
+		const {localStream, client} = this;
+
+		if (localStream) {
+			await client.unpublish(localStream);
+		}
+
+		await client.leave();
 	}
 
 	getVideoDevices() {
