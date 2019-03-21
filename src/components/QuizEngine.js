@@ -525,7 +525,7 @@ export default class QuizEngine {
 
             let start = new Date();
             
-            let quiz_role, reason;
+            let quiz_role = game_role == 'audience' && game_role, reason;
             
             let timer_id = setInterval(async () => {
                 const {game_status} = this;
