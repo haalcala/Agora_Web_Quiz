@@ -75,7 +75,7 @@ export default function(props) {
         <div className='game-panel slide-in-top'>
             <div style={{flexGrow : 1, display: 'flex', border: '1px solid red', height: '100%'}}>
                 {/* <div style={{border: '1px solid green', flexGrow: 1, margin: 'auto'}}>1</div> */}
-                {quiz_engine.GAME_ID ?
+                {quiz_engine.game_role === 'host' || quiz_engine.GAME_ID ?
                     <QuestionPanel game_role={game_role} quiz_role={quiz_role} quiz_engine={quiz_engine} game_status={game_status} onSelectAnswer={onSelectAnswer}/>
                 :
                     <div className='slide-in-top' style={{margin: 'auto', _animationDelay: '1s'}}>

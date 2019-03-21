@@ -297,7 +297,10 @@ class AgoraRtcEngine extends EventEmitter {
 		const {localStream, client} = this;
 
 		if (localStream) {
-			await client.unpublish(localStream);
+			console.log('Unpublish local stream');
+			await client.unpublish(localStream, function (err) {
+				console.log("Unpublish local stream failed" + err);
+			});
 		}
 
 		await client.leave();
