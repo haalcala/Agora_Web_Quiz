@@ -246,7 +246,7 @@ class AgoraRtcEngine extends EventEmitter {
 			const remoteStream = this.streams[uid];
 			// const remoteStream = AgoraRTC.createStream({streamID: uid, video: true, audio: true, local: false, screen: false});
 
-			console.log('[AgoraRtcEngine.js] subscribe:: uid, remoteStream', uid, JSON.stringify(remoteStream));
+			console.log('[AgoraRtcEngine.js] subscribe:: uid, remoteStream', uid, remoteStream);
 	
 			if (remoteStream) {
 				const timer_id = setTimeout(() => {
