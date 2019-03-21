@@ -154,7 +154,7 @@ class AgoraRtcEngine extends EventEmitter {
 				let camera = videoSource;
 				let microphone = audioSource;
 		
-				let localStream = this.localStream = AgoraRTC.createStream({ streamId: uid, audio: true, cameraId: camera, microphoneId: microphone, video: true, screen: false });
+				let localStream = this.localStream = AgoraRTC.createStream({ streamID: uid, audio: true, cameraId: camera, microphoneId: microphone, video: true, screen: false });
 				//localStream = AgoraRTC.createStream({streamID: uid, audio: false, cameraId: camera, microphoneId: microphone, video: false, screen: true, extensionId: 'minllpmhdgpndnkomcoccfekfegnlikg'});
 	
 				localStream.setVideoProfile('720p_3');
@@ -174,6 +174,8 @@ class AgoraRtcEngine extends EventEmitter {
 	
 					client.publish(localStream, (err) => {
 						console.log("Publish local stream error: " + err);
+
+						reject(err);
 					});
 					
 					client.on('stream-published', (evt) => {
@@ -207,7 +209,7 @@ class AgoraRtcEngine extends EventEmitter {
 			localStream.play(dom.id, {fit: 'cover', position: 'unset'});
 	
 			resolve();
-	});
+		});
 	}
 
 	subscribe(uid, dom) {
@@ -217,16 +219,20 @@ class AgoraRtcEngine extends EventEmitter {
 			let { client } = this;
 
 			// const remoteStream = this.streams[uid];
-			const remoteStream = AgoraRTC.createStream({streamId: uid, video: true, audio: true});
+			const remoteStream = AgoraRTC.createStream({streamID: uid, video: true, audio: true});
 
-			console.log('[AgoraRtcEngine.js] subscribe:: remoteStream', remoteStream);
+			console.log('[AgoraRtcEngine.js] subscribe:: uid, remoteStream', uid, remoteStream);
 	
 			if (remoteStream) {
 				const timer_id = setTimeout(() => {
+					console.log('[AgoraRtcEngine.js] subscribe:: Trying to play stream for uid', uid);
+
 					remoteStream.play(dom.id, {fit: 'cover'});
 				}, 1000);
 
 				client.subscribe(remoteStream, (err) => {
+					console.log('[AgoraRtcEngine.js] subscribe:: err', err);
+
 					clearTimeout(timer_id);
 				});
 			}

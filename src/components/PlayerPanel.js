@@ -10,7 +10,7 @@ export default function PlayerPanel(props) {
 
     const [state, setState] = useState({joined: false});
     
-    console.log(`[${quiz_role}]:: `, 'PlayerPanel:: props', props, 'state', state);
+    // console.log(`[${quiz_role}]:: `, 'PlayerPanel:: props', props, 'state', state);
 
     // console.log(`[${quiz_role}]:: `, 'state.joined', state.joined);
 

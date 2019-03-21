@@ -29,8 +29,8 @@ export default props => {
         props.onSelectAnswer(answer);
 	}
 
-    console.log('QuestionPanel.render:: game_status', game_status);
-    console.log('QuestionPanel.render:: state', state);
+    // console.log('QuestionPanel.render:: game_status', game_status);
+    // console.log('QuestionPanel.render:: state', state);
 
     const { answer, question, question_answers } = game_status;
 
@@ -81,7 +81,7 @@ export default props => {
 function AnswerItem(props) {
     const {isSelectable, selected_answer, answer, i, option} = props;
 
-    console.log('AnswerItem:: props', props)
+    // console.log('AnswerItem:: props', props)
 
     // console.log("selected_answer", selected_answer, "answer", answer, "i", i, "option", option, "selectAnswer", selectAnswer);
 
