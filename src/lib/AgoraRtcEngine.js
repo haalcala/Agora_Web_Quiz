@@ -11,6 +11,8 @@ const { AgoraRTC } = global;
 class AgoraRtcEngine extends EventEmitter {
 	streams = {};
 
+	local_stream_config = { streamID: null, audio: true, cameraId: null, microphoneId: null, video: true, screen: false }
+
 	constructor() {
 		super();
 
@@ -112,15 +114,14 @@ class AgoraRtcEngine extends EventEmitter {
 	};
 
 	enableVideo = () => {
-		this.enable_video = true;
 	};
-
+	
 	setLogFile = (path) => {
-
+		
 	};
-
+	
 	enableLocalVideo = (enable) => {
-		this.enable_local_video = true;
+		this.local_stream_config.video = enable;
 	};
 
 	enableWebSdkInteroperability = (enable) => {
@@ -141,7 +142,7 @@ class AgoraRtcEngine extends EventEmitter {
 
 	joinChannel(token, channel, info, uid) {
 		return new Promise((resolve, reject) => {
-			let { client } = this;
+			let { client, local_stream_config } = this;
 	
 			client.join(token, channel, null, (uid) => {
 				console.log("User " + uid + " join channel successfully");
@@ -153,8 +154,13 @@ class AgoraRtcEngine extends EventEmitter {
 	
 				let camera = videoSource;
 				let microphone = audioSource;
-		
-				let localStream = this.localStream = AgoraRTC.createStream({ streamID: uid, audio: true, cameraId: camera, microphoneId: microphone, video: true, screen: false });
+
+				if (local_stream_config.video) {
+					local_stream_config.cameraId = camera;
+					local_stream_config.microphoneId = audioSource;
+				}
+
+				let localStream = this.localStream = AgoraRTC.createStream(local_stream_config);
 				//localStream = AgoraRTC.createStream({streamID: uid, audio: false, cameraId: camera, microphoneId: microphone, video: false, screen: true, extensionId: 'minllpmhdgpndnkomcoccfekfegnlikg'});
 	
 				localStream.setVideoProfile('720p_3');
@@ -219,7 +225,7 @@ class AgoraRtcEngine extends EventEmitter {
 			let { client } = this;
 
 			// const remoteStream = this.streams[uid];
-			const remoteStream = AgoraRTC.createStream({streamID: uid, video: true, audio: true});
+			const remoteStream = AgoraRTC.createStream({streamId: uid, video: true, audio: true});
 
 			console.log('[AgoraRtcEngine.js] subscribe:: uid, remoteStream', uid, remoteStream);
 	

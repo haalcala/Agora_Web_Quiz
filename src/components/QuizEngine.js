@@ -90,7 +90,11 @@ export default class QuizEngine {
         console.log('[QuizEngine.js|constructor]('+game_role+'):: game_status', game_status);
 
         this.signal = new SignalingClient(APP_ID);
-        this.rtcEngine = new AgoraRtcEngine();
+        const rtcEngine = this.rtcEngine = new AgoraRtcEngine();
+
+        if (['host', 'player'].indexOf(game_role) === -1) {
+            rtcEngine.enableLocalVideo(false);
+        }
 
         this.rtcEngine.initialize(APP_ID);
 
