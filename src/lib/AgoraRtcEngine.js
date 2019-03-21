@@ -20,60 +20,62 @@ class AgoraRtcEngine extends EventEmitter {
 	}
 
 	initialize(appId) {
-		const { client } = this;
+		const { client, local_stream_config } = this;
+
+		console.log("[AgoraRtcEngine.js]:: initialize:: local_stream_config ", local_stream_config);
 
 		return new Promise((resolve, reject) => {
 			client.init(appId, async () => {
 				console.log("AgoraRTC client initialized");
 
 				(await this.getVideoDevices()).map(device => {
-					console.log('initialise(getVideoDevices):: device', device);
+					console.log('[AgoraRtcEngine.js] initialize:: initialise(getVideoDevices):: device', device);
 
 					if (!this.videoSource) {
 						this.videoSource = device.deviceId;
 					}
 				});
 				(await this.getAudioRecordingDevices()).map(device => {
-					console.log('initialise(getAudioRecordingDevices):: device', device);
+					console.log('[AgoraRtcEngine.js] initialize:: initialise(getAudioRecordingDevices):: device', device);
 
 					if (!this.audioSource) {
 						this.audioSource = device.deviceId;
 					}
 				});
 
-				console.log('this', this);
+				console.log('[AgoraRtcEngine.js] initialize:: this', this);
 
 				resolve();
 			}, function (err) {
-				console.log("AgoraRTC client init failed", err);
+				console.log("[AgoraRtcEngine.js] initialize:: AgoraRTC client init failed", err);
 
 				reject(err);
 			});
 
 			  client.on('error', (err) => {
-				console.log("Got error msg:", err.reason);
+				console.log("[AgoraRtcEngine.js] initialize:: Got error msg:", err.reason);
 				if (err.reason === 'DYNAMIC_KEY_TIMEOUT') {
 				  client.renewChannelKey(this._channel, ()=> {
-					console.log("Renew channel key successfully");
+					console.log("[AgoraRtcEngine.js] initialize:: Renew channel key successfully");
 				  }, (err)=> {
-					console.log("Renew channel key failed: ", err);
+					console.log("[AgoraRtcEngine.js] initialize:: Renew channel key failed: ", err);
 				  });
 				}
 			  });
 			
 			  client.on('stream-added',  (evt) => {
 				var stream = evt.stream;
-				console.log("New stream added: " + stream.getId());
-				console.log("Subscribe ", stream);
+				console.log("[AgoraRtcEngine.js] initialize:: New stream added: " + stream.getId());
+				console.log("[AgoraRtcEngine.js] initialize:: Subscribe ", stream);
 				// client.subscribe(stream,  (err) => {
-				//   console.log("Subscribe stream failed", err);
+				//   console.log("[AgoraRtcEngine.js] initialize:: Subscribe stream failed", err);
 				// });
 				this.streams[stream.getId()] = stream;
 			  });
 			
 			  client.on('stream-subscribed',  (evt) => {
 				var stream = evt.stream;
-				console.log("Subscribe remote stream successfully: " + stream.getId());
+				console.log("[AgoraRtcEngine.js] initialize:: Subscribe remote stream successfully: " + stream.getId());
 				// if ($('div#video #agora_remote'+stream.getId()).length === 0) {
 				//   $('div#video').append('<div id="agora_remote'+stream.getId()+'" style="float:left; width:810px;height:607px;display:inline-block;"></div>');
 				// }
@@ -84,7 +86,7 @@ class AgoraRtcEngine extends EventEmitter {
 				var stream = evt.stream;
 				stream.stop();
 				// $('#agora_remote' + stream.getId()).remove();
-				console.log("Remote stream is removed " + stream.getId());
+				console.log("[AgoraRtcEngine.js] initialize:: Remote stream is removed " + stream.getId());
 
 				delete this.streams[stream.getId()];
 			  });
@@ -94,7 +96,7 @@ class AgoraRtcEngine extends EventEmitter {
 				if (stream) {
 				  stream.stop();
 				//   $('#agora_remote' + stream.getId()).remove();
-				  console.log(evt.uid + " leaved from this channel");
+				  console.log("[AgoraRtcEngine.js] initialize:: " + evt.uid + " leaved from this channel");
 				  delete this.streams[stream.getId()];
 				}
 			  });
@@ -140,17 +142,25 @@ class AgoraRtcEngine extends EventEmitter {
 
 	};
 
-	joinChannel(token, channel, info, uid) {
+	joinChannel = (token, channel, info, uid) => {
 		return new Promise((resolve, reject) => {
 			let { client, local_stream_config } = this;
 	
+			console.log("[AgoraRtcEngine.js]:: joinChannel:: local_stream_config ", local_stream_config);
+
 			client.join(token, channel, null, (uid) => {
-				console.log("User " + uid + " join channel successfully");
+				console.log("[AgoraRtcEngine.js]:: joinChannel:: User " + uid + " join channel successfully");
 
 				this._channel = channel;
 				this.local = uid;
 
 				let { client, videoSource, audioSource, local } = this;
+
+				console.log('[AgoraRtcEngine.js]:: joinChannel:: local_stream_config.video', local_stream_config.video)
+
+				if (!local_stream_config.video) {
+					return;
+				}
 	
 				let camera = videoSource;
 				let microphone = audioSource;
@@ -167,39 +177,39 @@ class AgoraRtcEngine extends EventEmitter {
 		
 				// The user has granted access to the camera and mic. 
 				localStream.on("accessAllowed", function () {
-					console.log("accessAllowed");
+					console.log("[AgoraRtcEngine.js]:: joinChannel:: accessAllowed");
 				});
 		
 				// The user has denied access to the camera and mic.
 				localStream.on("accessDenied", function () {
-					console.log("accessDenied");
+					console.log("[AgoraRtcEngine.js]:: joinChannel:: accessDenied");
 				});
 		
 				localStream.init(() => {
-					console.log("getUserMedia successfully");
+					console.log("[AgoraRtcEngine.js]:: joinChannel:: getUserMedia successfully");
 	
 					client.publish(localStream, (err) => {
-						console.log("Publish local stream error: " + err);
+						console.log("[AgoraRtcEngine.js]:: joinChannel:: Publish local stream error: " + err);
 
 						reject(err);
 					});
 					
 					client.on('stream-published', (evt) => {
-						console.log("Publish local stream successfully");
+						console.log("[AgoraRtcEngine.js]:: joinChannel:: Publish local stream successfully");
 						setImmediate(this.emit.bind(this, 'joinedchannel', this._channel, this.local, 0));
 
 						resolve(localStream);
 					});
 			
 				}, function (err) {
-					console.log("getUserMedia failed", err);
+					console.log("[AgoraRtcEngine.js]:: joinChannel:: getUserMedia failed", err);
 	
 					reject(err);
 				});
 
 				// resolve(uid);
 			}, function (err) {
-				console.log("Join channel failed", err);
+				console.log("[AgoraRtcEngine.js]:: joinChannel:: Join channel failed", err);
 
 				reject(err);
 			});

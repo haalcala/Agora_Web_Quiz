@@ -93,10 +93,12 @@ export default class QuizEngine {
         const rtcEngine = this.rtcEngine = new AgoraRtcEngine();
 
         if (['host', 'player'].indexOf(game_role) === -1) {
+            console.log('[QuizEngine.js|constructor]('+game_role+'):: disabling local video for audience');
+
             rtcEngine.enableLocalVideo(false);
         }
 
-        this.rtcEngine.initialize(APP_ID);
+        rtcEngine.initialize(APP_ID);
 
         console.log('this.signal', this.signal);
         console.log('this.rtcEngine', this.rtcEngine);
@@ -141,7 +143,7 @@ export default class QuizEngine {
         rtcEngine.setAudioProfile(0, 1)
         rtcEngine.enableVideo()
         rtcEngine.setLogFile('~/agoraabc.log')
-        rtcEngine.enableLocalVideo(true)
+        // rtcEngine.enableLocalVideo(true)
         rtcEngine.enableWebSdkInteroperability(true)
         rtcEngine.setVideoProfile(videoProfile, false)
         rtcEngine.enableDualStreamMode(true)
