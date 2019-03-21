@@ -170,6 +170,7 @@ class AgoraRtcEngine extends EventEmitter {
 				if (local_stream_config.video) {
 					local_stream_config.cameraId = camera;
 					local_stream_config.microphoneId = audioSource;
+					local_stream_config.streamID = uid;
 				}
 
 				let localStream = this.localStream = AgoraRTC.createStream(local_stream_config);
