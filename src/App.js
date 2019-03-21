@@ -56,6 +56,8 @@ export default (props) => {
     // }, 1000);
     
     const onExit = async () => {
+        state.quiz_engine.logout();
+        
         setState({...state, quiz_engine: null, show_menu: true, game_role: null});
     };
 

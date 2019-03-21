@@ -83,6 +83,10 @@ export default class SignalingClient {
     console.log('----->>>>> signalingClient.logout()');
 
     return new Promise((resolve, reject) => {
+        if (!this.session) {
+            return resolve();
+        }
+
       this.session.logout();
       this.sessionEmitter.once('onLogout', (...args) => {
         resolve(...args);

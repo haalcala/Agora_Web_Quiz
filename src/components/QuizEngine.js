@@ -272,6 +272,9 @@ export default class QuizEngine {
 
 						delete game_status[`${player_key}_player_id`];
 						delete game_status[`${player_key}_video_stream_id`];
+						delete game_status[`${player_key}_answered`];
+						delete game_status[`${player_key}_answer_correct`];
+						delete this[`${player_key}_answer`];
 					}
 				});
 
@@ -700,7 +703,20 @@ export default class QuizEngine {
     };
 
     logout = async () => {
+        const {signal, rtcEngine} = this;
 
+        if (rtcEngine) {
+            rtcEngine.enableLocalVideo(false);
+            rtcEngine.disableVideo();
+            rtcEngine.enableDualStreamMode(false);
+    
+            rtcEngine.leaveChannel(this.GAME_ID);
+        }
+
+        if (signal) {
+            signal.leave();
+            signal.logout();
+        }
     };
 
     setupLocalVideo(dom) {

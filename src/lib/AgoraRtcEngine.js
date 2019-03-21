@@ -122,6 +122,9 @@ class AgoraRtcEngine extends EventEmitter {
 	enableVideo = () => {
 	};
 	
+	disableVideo = () => {
+	};
+	
 	setLogFile = (path) => {
 		
 	};
@@ -288,6 +291,10 @@ class AgoraRtcEngine extends EventEmitter {
 				resolve(devices.filter(device => device.kind === filter && device));
 			});
 		})
+	}
+
+	leaveChannel = async (channel) => {
+		await this.client.leave();
 	}
 
 	getVideoDevices() {
