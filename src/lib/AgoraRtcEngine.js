@@ -173,6 +173,8 @@ class AgoraRtcEngine extends EventEmitter {
 					local_stream_config.streamID = uid;
 				}
 
+				console.log('[AgoraRtcEngine.js]:: joinChannel:: creating local stream with local_stream_config', local_stream_config)
+
 				let localStream = this.localStream = AgoraRTC.createStream(local_stream_config);
 				//localStream = AgoraRTC.createStream({streamID: uid, audio: false, cameraId: camera, microphoneId: microphone, video: false, screen: true, extensionId: 'minllpmhdgpndnkomcoccfekfegnlikg'});
 	
