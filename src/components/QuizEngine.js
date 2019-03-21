@@ -377,7 +377,22 @@ export default class QuizEngine {
 			console.log('---===>>> this.rtcEngine.on(\'removestream\'):: uid, reason', uid, reason);
 			// // this.setState({
 			// 	users: this.users.delete(this.users.indexOf(uid))
-			// });
+            // });
+            
+            if (this.game_role === 'host') {
+                let found = false;
+
+                _.times(3, x => `player${x+1}`).map(player_key => {
+                    if (!found && this.game_status[`${player_key}_video_stream_id`] == uid) {
+                        delete this.game_status[`${player_key}_video_stream_id`];
+                        found = true;
+                    }
+                });
+
+                if (found) {
+                    this.setGameStatus();
+                }
+            }
 		});
 
 		this.rtcEngine.on('leavechannel', () => {
