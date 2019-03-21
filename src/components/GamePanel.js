@@ -8,7 +8,7 @@ import PlayerPanel from './PlayerPanel';
 import QuestionPanel from './QuestionPanel';
 
 export default function(props) {
-    const [state, setState] = useState({_GAME_ID: 'Z7ZOKtIzxZ'});
+    const [state, setState] = useState({_GAME_ID: 'TM7icfGWl4'});
 
     const {quiz_engine} = props;
     const {game_role, quiz_role, PLAYER_ID, game_status} = quiz_engine;
