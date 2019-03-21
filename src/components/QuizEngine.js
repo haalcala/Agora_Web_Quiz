@@ -270,7 +270,7 @@ export default class QuizEngine {
 					if (game_status[`${player_key}_player_id`] === account) {
                         console.log('removing player with account id', account);
 
-						delete game_status[player_key];
+						delete game_status[`${player_key}_player_id`];
 						delete game_status[`${player_key}_video_stream_id`];
 					}
 				});
@@ -385,7 +385,6 @@ export default class QuizEngine {
 
 			const new_state = {
 				local: '', localVideoSource: '',
-				users: this.users.splice(0),
 				videos_on: []
 			};
 

@@ -89,6 +89,8 @@ class AgoraRtcEngine extends EventEmitter {
 				console.log("[AgoraRtcEngine.js] initialize:: Remote stream is removed " + stream.getId());
 
 				delete this.streams[stream.getId()];
+
+				setImmediate(this.emit.bind(this, 'removestream', stream.getId(), 'stream-removed'));
 			  });
 			
 			  client.on('peer-leave',  (evt) => {
@@ -98,6 +100,8 @@ class AgoraRtcEngine extends EventEmitter {
 				//   $('#agora_remote' + stream.getId()).remove();
 				  console.log("[AgoraRtcEngine.js] initialize:: " + evt.uid + " leaved from this channel");
 				  delete this.streams[stream.getId()];
+
+				  setImmediate(this.emit.bind(this, 'leavechannel'));
 				}
 			  });
 		});
