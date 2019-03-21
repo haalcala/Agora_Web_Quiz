@@ -159,6 +159,8 @@ class AgoraRtcEngine extends EventEmitter {
 				console.log('[AgoraRtcEngine.js]:: joinChannel:: local_stream_config.video', local_stream_config.video)
 
 				if (!local_stream_config.video) {
+					setImmediate(this.emit.bind(this, 'joinedchannel', this._channel, this.local, 0));
+
 					return;
 				}
 	
@@ -234,8 +236,8 @@ class AgoraRtcEngine extends EventEmitter {
 		return new Promise((resolve, reject) => {
 			let { client } = this;
 
-			// const remoteStream = this.streams[uid];
-			const remoteStream = AgoraRTC.createStream({streamId: uid, video: true, audio: true});
+			const remoteStream = this.streams[uid];
+			// const remoteStream = AgoraRTC.createStream({streamID: uid, video: true, audio: true, local: false, screen: false});
 
 			console.log('[AgoraRtcEngine.js] subscribe:: uid, remoteStream', uid, remoteStream);
 	

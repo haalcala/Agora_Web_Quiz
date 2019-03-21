@@ -47,6 +47,10 @@ code {
     /* padding: 3px; */
 }
 
+.window-item div {
+    display: flex;
+}
+
 .player-icon {
     width: 190px;
     height: 220px;
