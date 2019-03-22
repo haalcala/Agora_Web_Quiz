@@ -310,6 +310,10 @@ class AgoraRtcEngine extends EventEmitter {
 		return this.getDevices('videoinput')
 	}
 
+	setVideoDevice(cameraId) {
+		return this.cameraId = cameraId;
+	}
+
 	getAudioRecordingDevices() {
 		return this.getDevices('audioinput');
 	}
