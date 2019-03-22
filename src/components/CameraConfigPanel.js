@@ -89,7 +89,10 @@ export const videoProfileList = [
     const {quiz_engine} = props;
     const {rtcEngine} = quiz_engine;
 
-    const [state, setState] = useState({});
+    const [state, setState] = useState({
+        camera: rtcEngine.cameraId,
+        mic: rtcEngine.microphoneId,
+    });
 
     useEffect(() => {
         if (state.show_panel) {
@@ -100,9 +103,15 @@ export const videoProfileList = [
         } 
         
         (async () => {
-            const video_devices = await quiz_engine.getVideoDevices();
-    
-            console.log('video_devices', video_devices);
+            const videoDevices = await rtcEngine.getVideoDevices();
+            const audioDevices = await rtcEngine.getAudioRecordingDevices();
+            const audioPlaybackDevices = await rtcEngine.getAudioPlaybackDevices();
+
+            console.log('videoDevices', videoDevices);
+            console.log('audioDevices', audioDevices);
+            console.log('audioPlaybackDevices', audioPlaybackDevices);
+
+            setState({...state, videoDevices, audioDevices, audioPlaybackDevices});
         })();
     }, [state.show_panel]);
 
@@ -237,7 +246,7 @@ export const videoProfileList = [
 						<div className="control">
 							<div className="select" style={{ width: '100%' }}>
 								<select onChange={handleCameraChange} value={state.camera} style={{ width: '100%' }}>
-									{state.videoDevices.map((item, index) => (<option key={index} value={index}>{item.devicename}</option>))}
+									{state.videoDevices && state.videoDevices.map((item, index) => (<option key={index} value={index}>{item.label}</option>)) || null}
 								</select>
 							</div>
 						</div>
@@ -247,7 +256,7 @@ export const videoProfileList = [
 						<div className="control">
 							<div className="select" style={{ width: '100%' }}>
 								<select onChange={handleMicChange} value={state.mic} style={{ width: '100%' }}>
-									{state.audioDevices.map((item, index) => (<option key={index} value={index}>{item.devicename}</option>))}
+									{state.audioDevices && state.audioDevices.map((item, index) => (<option key={index} value={index}>{item.label}</option>)) || null}
 								</select>
 							</div>
 						</div>
@@ -257,7 +266,7 @@ export const videoProfileList = [
 						<div className="control">
 							<div className="select" style={{ width: '100%' }}>
 								<select onChange={handleSpeakerChange} value={state.speaker} style={{ width: '100%' }}>
-									{state.audioPlaybackDevices.map((item, index) => (<option key={index} value={index}>{item.devicename}</option>))}
+									{state.audioPlaybackDevices && state.audioPlaybackDevices.map((item, index) => (<option key={index} value={index}>{item.label}</option>)) || null}
 								</select>
 							</div>
 						</div>
@@ -285,6 +294,11 @@ export const videoProfileList = [
 						<label className="label">Audio Recording Test</label>
 						<div className="control">
 							<button onClick={toggleRecordingTest} className="button is-link">{state.recordingTestOn ? 'stop' : 'start'}</button>
+						</div>
+					</div>
+					<div className="field">
+						<div className="control">
+							<button onClick={() => setState({...state, show_panel: false})} className="button is-link">Close</button>
 						</div>
 					</div>
                 </div>

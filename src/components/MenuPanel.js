@@ -5,7 +5,6 @@ import CameraConfigPanel from './CameraConfigPanel';
 
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, Form, FormGroup } from 'reactstrap';
 
-
 export default props => {
     console.log('[MenuPanel.js]:: props', props);
 

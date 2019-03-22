@@ -252,6 +252,10 @@ code {
   border-color: black;
 }
 
+.settings-item-panel button {
+    width: 100%;
+}
+
 .modal-content {
     @extend: .modal-content;
     margin: auto;
