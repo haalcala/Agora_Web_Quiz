@@ -311,7 +311,11 @@ class AgoraRtcEngine extends EventEmitter {
 	}
 
 	setVideoDevice(cameraId) {
-		return this.cameraId = cameraId;
+		console.log('[AgoraRtcEngine.js] setVideoDevice:: cameraId', cameraId);
+
+		this.cameraId = cameraId;
+
+		this.localStream.switchDevice('video', cameraId);
 	}
 
 	getAudioRecordingDevices() {

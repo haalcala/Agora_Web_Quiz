@@ -90,7 +90,7 @@ export const videoProfileList = [
     const {rtcEngine} = quiz_engine;
 
     const [state, setState] = useState({
-        camera: rtcEngine.cameraId,
+        camera: 0,
         mic: rtcEngine.microphoneId,
     });
 
@@ -110,6 +110,12 @@ export const videoProfileList = [
             console.log('videoDevices', videoDevices);
             console.log('audioDevices', audioDevices);
             console.log('audioPlaybackDevices', audioPlaybackDevices);
+
+            videoDevices && videoDevices.forEach((device, devicei) => {
+                if (rtcEngine.cameraId === device.deviceId) {
+                    state.camera = devicei;
+                }
+            });
 
             setState({...state, videoDevices, audioDevices, audioPlaybackDevices});
         })();
@@ -136,8 +142,12 @@ export const videoProfileList = [
 	}
 
 	const handleCameraChange = e => {
-		setState({ camera: e.currentTarget.value });
-		rtcEngine.setVideoDevice(state.videoDevices[e.currentTarget.value].deviceid);
+        console.log('e.currentTarget.value', e.currentTarget.value);
+        console.log('state.videoDevices', state.videoDevices);
+        console.log('state.videoDevices[e.currentTarget.value].deviceId', state.videoDevices[e.currentTarget.value].deviceId)
+
+		setState({...state, camera: state.videoDevices[e.currentTarget.value].deviceId });
+		rtcEngine.setVideoDevice(state.videoDevices[e.currentTarget.value].deviceId);
 	}
 
 	const handleMicChange = e => {
